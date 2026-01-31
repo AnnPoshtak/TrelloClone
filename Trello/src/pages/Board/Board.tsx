@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
 import type { IList } from "../../common/interfaces/IList.ts"
 import List from "./components/List/List.tsx";
 
-
-
 function Board() {
+    const { board_id } = useParams();
+
     const [title, setTitle] = useState<string>("Моя тестова дошка");
 
     const [lists, setLists] = useState<IList[]>([
@@ -14,14 +15,7 @@ function Board() {
             cards: [
                 { id: 1, title: "помити кота" },
                 { id: 2, title: "приготувати суп" },
-                { id: 3, title: "сходити в магазин" },
-                { id: 4, title: "<UNK> <UNK> <UNK>" },
-                { id: 5, title: "<UNK> <UNK> <UNK>" },
-                { id: 6, title: "<UNK> <UNK> <UNK>" },
-                { id: 7, title: "<UNK> <UNK> <UNK>" },
-                { id: 8, title: "<UNK> <UNK> <UNK>" },
-                { id: 9, title: "<UNK> <UNK> <UNK>" },
-                { id: 10, title: "<UNK> <UNK> <UNK>" },
+                { id: 3, title: "сходити в магазин" }
             ]
         },
         {
@@ -43,7 +37,7 @@ function Board() {
 
     return (
         <div className="board">
-            <h1 className="title">{title}</h1>
+            <h1 className="title">{title} (ID: {board_id})</h1>
 
             <div className="lists-container">
                 {lists.map((list) => (

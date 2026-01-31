@@ -87,6 +87,27 @@ button {
 
 }
 
+.add-board-btn{
+  width: 90%;
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translatex(-50%);
+}
+
+.board-container {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: center;
+}
+
+.board-card {
+  width: 200px;
+  height: 100px;
+  border-radius: 30px;
+}
+
 button:hover {
   background-color: #777;
 }
