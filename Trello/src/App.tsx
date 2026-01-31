@@ -1,4 +1,3 @@
-import './App.css'
 import Board from './pages/Board/Board.tsx'
 import Home from './pages/Home/Home.tsx'
 import {BrowserRouter, Route, Routes} from "react-router-dom";
