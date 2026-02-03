@@ -1,17 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import type { IBoard } from "../../common/interfaces/IBoard.ts"
+import type { IBoard } from "../../common/interfaces/IBoard.ts";
 import BoardComponent from "./components/BoardComponent/BoardComponent.tsx";
+import Modal from "./components/Modal/Modal.tsx";
+import api from "../../api/request.ts";
 
 function Home () {
-    const [boards, setBoards] = useState<IBoard[]>(
-        [
-            {id: 1, title: "покупки", custom: {background: "red"}},
-            {id: 2, title: "підготовка до весілля", custom: {background: "green"}},
-            {id: 3, title: "розробка інтернет-магазину", custom: {background: "blue"}},
-            {id: 4, title: "курс по просуванню у соцмережах", custom: {background: "grey"}}
-        ]
-    );
+    const [boards, setBoards] = useState<IBoard[]>([]);
+    const [modalStatus, setModalStatus] = useState<boolean>(false);
+
+    useEffect(() => {
+        async function fetchBoards(){
+            const result = await api.get('/board');
+            setBoards(result.boards);
+        }
+        fetchBoards();
+    }, []);
+
+    async function createBoard(title: string, color: string) {
+        const response = await api.post('/board', {
+            title: title,
+            custom: {
+                background: color
+            }
+        });
+        console.log("Сервер відповів:", response.data);
+        const newBoard: IBoard = {
+            id: response.data.id,
+            title: title,
+            custom: {
+                background: color
+            }
+        };
+
+        setBoards([...boards, newBoard]);
+        setModalStatus(false);
+    }
 
     return (
         <>
@@ -26,7 +50,9 @@ function Home () {
                     </Link>
                 ))}
             </div>
-            <button className="add-board-btn">+ add new board</button>
+            <button className="add-board-btn" onClick={() => setModalStatus(true)}>+ add new board</button>
+
+            <Modal modalStatus={modalStatus} onClose={() => setModalStatus(false)} onSubmit={createBoard}/>
         </>
     )
 }
