@@ -3,59 +3,48 @@ import { useParams } from "react-router-dom";
 import type { IList } from "../../common/interfaces/IList.ts";
 import type { IBoard } from "../../common/interfaces/IBoard.ts";
 import List from "./components/List/List.tsx";
+import CreateListModal from "./components/CreateListModal/CreateListModal.tsx";
 import api from "../../api/request.ts";
 
 function Board() {
-    // 1. ВАЖЛИВО: Ім'я тут МАЄ співпадати з :board_id в App.tsx
     const { board_id } = useParams();
-
     const [board, setBoard] = useState<IBoard | null>(null);
+    const [isModalOpen, setIsModalOpen] = useState(false);
 
-    // Мок-дані для списків (поки що)
     const [lists, setLists] = useState<IList[]>([
-        {
-            id: 1,
-            title: "Плани",
-            cards: [{ id: 1, title: "помити кота" }]
-        }
+        { id: 1, title: "Плани", cards: [{ id: 1, title: "помити кота" }] },
     ]);
 
     useEffect(() => {
         async function fetchBoardData() {
-            // 2. Перевіряємо саме board_id
             if (!board_id) return;
-
-            try {
-                // 3. Робимо запит з board_id
-                const response = await api.get(`/board/${board_id}`);
-
-                console.log("Прийшла дошка:", response); // Глянь в консоль!
-                setBoard(response);
-
-            } catch (error) {
-                console.error("Помилка:", error);
-                alert("Не знайшов таку дошку!");
-            }
+            const response = await api.get(`/board/${board_id}`);
+            setBoard(response);
+            if (response.lists) setLists(response.lists);
         }
-
         fetchBoardData();
-    }, [board_id]); // 4. Слідкуємо за board_id
+    }, [board_id]);
 
-    // Лоадер
-    if (!board) {
-        return <div style={{ padding: "20px" }}>Завантаження... (ID: {board_id})</div>;
+    async function handleCreateList(title: string) {
+        const newPosition = lists.length + 1;
+        const response = await api.post(`/board/${board_id}/list`, {
+            title: title,
+            position: newPosition
+        });
+        const newList: IList = {
+            id: response.id || Date.now(),
+            title: title,
+            cards: []
+        };
+
+        setLists([...lists, newList]);
+        setIsModalOpen(false);
     }
 
-    // Рендер
+    if (!board) return <div>Завантаження...</div>;
+
     return (
-        <div
-            className="board"
-            style={{
-                background: board.custom?.background || '#eee',
-                minHeight: '100vh',
-                padding: '20px'
-            }}
-        >
+        <div className="board">
             <h1 className="title">{board.title}</h1>
 
             <div className="lists-container">
@@ -67,11 +56,16 @@ function Board() {
                         cards={list.cards}
                     />
                 ))}
+                <button className="add-list-btn" onClick={() => setIsModalOpen(true)}>
+                    + add new list
+                </button>
             </div>
 
-            <div className="board-controls">
-                <button className="add-list-btn">+ add new list</button>
-            </div>
+            <CreateListModal
+                modalStatus={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+                onSubmit={handleCreateList}
+            />
         </div>
     );
 }

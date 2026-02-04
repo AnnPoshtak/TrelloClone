@@ -23,30 +23,27 @@ function Modal({ modalStatus, onClose, onSubmit }: IProps) {
     }
 
     return (
-        <div className="modal-overlay" onClick={onClose}>
+        <div className="modal-overlay" onClick={onClose} style={{borderRadius: '10px', border: "3px solid black", width: '500px'}}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <h3>Create new board</h3>
-
-                {/* ВАЖЛИВО: кнопки мають бути всередині form */}
-                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '10px'}}>
-
+                <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center'}}>
                     <input
                         type="text"
                         placeholder="Title"
-                        value={title} // Зв'язуємо value зі стейтом
+                        value={title}
                         onChange={(e) => setTitle(e.target.value)}
                         autoFocus
-                        style={{ padding: "10px" }}
+                        style={{ padding: "10px", width: "300px", marginBottom: '10px' }}
                     />
 
                     <input
                         type="color"
                         value={color}
                         onChange={(e) => setColor(e.target.value)}
-                        style={{ width: "100%", height: "40px" }}
+                        style={{ height: "40px", width: "300px", marginBottom: '10px' }}
                     />
 
-                    <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
+                    <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '10px' }}>
                         <button type="button" onClick={onClose}>Cancel</button>
                         <button type="submit">Create</button>
                     </div>

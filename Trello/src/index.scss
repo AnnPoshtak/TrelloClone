@@ -18,7 +18,7 @@ body {
   display: flex;
   align-items: flex-start;
   justify-content: space-around;
-  gap: 15px;
+  gap: 60px;
   padding-bottom: 20px;
   height: 400px;
 }
@@ -60,6 +60,10 @@ div[class^="list"] {
   box-shadow: 0 10px 15px rgba(0,0,0,0.2);
 }
 
+.card{
+  word-break: break-all;
+}
+
 button {
   margin-top: 20px;
   padding: 10px;
@@ -74,17 +78,15 @@ button {
 .add-list-btn{
   width: 90%;
   position: absolute;
+  bottom: 20px;
   left: 50%;
   transform: translatex(-50%);
 }
 
 .add-card-btn{
-  width: 90%;
+  width: 350px;
   position: absolute;
-  bottom: 120px;
-  left: 50%;
-  transform: translatex(-50%);
-
+  top: 500px
 }
 
 .add-board-btn{
