@@ -23,7 +23,7 @@ function Modal({ modalStatus, onClose, onSubmit }: IProps) {
     }
 
     return (
-        <div className="modal-overlay" onClick={onClose} style={{borderRadius: '10px', border: "3px solid black", width: '500px'}}>
+        <div className="modal-overlay" onClick={onClose}>
             <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                 <h3>Create new board</h3>
                 <form onSubmit={handleSubmit} style={{display: 'flex', flexDirection: 'column', gap: '10px', alignItems: 'center'}}>

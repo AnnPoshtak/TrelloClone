@@ -26,7 +26,7 @@ function Home () {
         });
         console.log("Сервер відповів:", response.data);
         const newBoard: IBoard = {
-            id: response.data.id,
+            id: response.id,
             title: title,
             custom: {
                 background: color
