@@ -44,29 +44,32 @@ function Board() {
     async function handleCreateCard(title: string, listId: number) {
         const targetList = lists.find(list => list.id === listId);
         if (!targetList) return;
+
         const newPosition = targetList.cards.length + 1;
-        const payload = {
+
+        const load = {
             title: title,
             list_id: listId,
             position: newPosition,
             description: "",
         };
 
-        try {
-            const response = await api.post(`/board/${board_id}/card`, payload);
-            setLists(prevLists => prevLists.map(list => {
-                if (list.id === listId) {
-                    return {
-                        ...list, cards: [...list.cards, response]};
-                }
-                return list;
-            }));
-
-            setIsCardModalOpen(false);
-
-        } catch (error) {
-            console.error("Помилка створення картки:", error);
-        }
+        const response = await api.post(`/board/${board_id}/card`, load);
+        const serverData = response.data || response;
+        const newCard = {
+            ...load,
+            ...serverData,
+        };
+        setLists(prevLists => prevLists.map(list => {
+            if (list.id === listId) {
+                return {
+                    ...list,
+                    cards: [...list.cards, newCard]
+                };
+            }
+            return list;
+        }));
+        setIsCardModalOpen(false);
     }
 
     if (!board) return <div>Завантаження...</div>;
