@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import type { IList } from "../../common/interfaces/IList.ts";
 import type { IBoard } from "../../common/interfaces/IBoard.ts";
 import List from "./components/List/List.tsx";
 import CreateListModal from "./components/CreateListModal/CreateListModal.tsx";
 import CreateCardModal from "./components/CreateCardModal/CreateCardModal.tsx";
+import {deleteList} from "../../functions/DeleteList/DeleteList.tsx"
 import api from "../../api/request.ts";
 
 function Board() {
@@ -72,19 +73,37 @@ function Board() {
         setIsCardModalOpen(false);
     }
 
+    const handleListDelete = async (listId: number) => {
+        await deleteList(board_id, listId);
+        setLists(prevLists => prevLists.filter(list => list.id !== listId));
+    };
+
     if (!board) return <div>Завантаження...</div>;
 
     return (
         <div className="board">
-            <h1 className="title">{board.title}</h1>
+            <h1 className="title">{`${board.title}(ID: ${board_id})`}</h1>
 
             <div className="lists-container">
                 {lists.map((list) => (
                     <List
                         key={list.id}
                         id={list.id}
+                        boardId={board_id}
                         title={list.title}
                         cards={list.cards}
+                        onCardDelete={(cardId) => {
+                            setLists(prevLists => prevLists.map(l => {
+                                if (l.id === list.id) {
+                                    return {
+                                        ...l,
+                                        cards: l.cards.filter(c => c.id !== cardId)
+                                    };
+                                }
+                                return l;
+                            }));
+                        }}
+                        onListDelete={handleListDelete}
                     />
                 ))}
                 <button className="add-list-btn" onClick={() => setIsListModalOpen(true)}>+ add new list</button>
@@ -98,6 +117,8 @@ function Board() {
             />
 
             <CreateCardModal modalStatus={isCardModalOpen} onClose={() => setIsCardModalOpen(false)} onSubmit={handleCreateCard} lists={lists}/>
+
+            <Link to={"/"} className={"home-btn"}>Home</Link>
         </div>
     );
 }

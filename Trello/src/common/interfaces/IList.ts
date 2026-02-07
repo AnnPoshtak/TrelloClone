@@ -4,4 +4,5 @@ export interface IList {
     id: number;
     title: string;
     cards: Card[];
+    boardId: number;
 }
