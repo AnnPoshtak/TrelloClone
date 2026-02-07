@@ -1,15 +1,17 @@
 import { useState, useEffect } from "react";
-import {Link, useParams} from "react-router-dom";
+import {Link, useNavigate, useParams} from "react-router-dom";
 import type { IList } from "../../common/interfaces/IList.ts";
 import type { IBoard } from "../../common/interfaces/IBoard.ts";
 import List from "./components/List/List.tsx";
 import CreateListModal from "./components/CreateListModal/CreateListModal.tsx";
 import CreateCardModal from "./components/CreateCardModal/CreateCardModal.tsx";
-import {deleteList} from "../../functions/DeleteList/DeleteList.tsx"
+import {deleteList} from "../../functions/DeleteList/DeleteList.ts"
+import {deleteBoard} from "../../functions/DeleteBoard/DeleteBoard.ts";
 import api from "../../api/request.ts";
 
 function Board() {
     const { board_id } = useParams();
+    const navigate = useNavigate()
     const [board, setBoard] = useState<IBoard | null>(null);
     const [isListModalOpen, setIsListModalOpen] = useState(false);
     const [isCardModalOpen, setIsCardModalOpen] = useState(false);
@@ -78,11 +80,19 @@ function Board() {
         setLists(prevLists => prevLists.filter(list => list.id !== listId));
     };
 
+    const handleBoardDelete = async (board_id: number) => {
+        await deleteBoard(board_id)
+        navigate('/');
+    }
+
     if (!board) return <div>Завантаження...</div>;
 
     return (
         <div className="board">
-            <h1 className="title">{`${board.title}(ID: ${board_id})`}</h1>
+            <div className="title">
+                <h1>{`${board.title}(ID: ${board_id})`}</h1>
+                <button onClick={() => handleBoardDelete(board_id)} className="delete-btn">❌</button>
+            </div>
 
             <div className="lists-container">
                 {lists.map((list) => (

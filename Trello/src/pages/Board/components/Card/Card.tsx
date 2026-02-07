@@ -1,4 +1,4 @@
-import { deleteCard } from "../../../../functions/DeleteCard/DeleteCard.tsx";
+import { deleteCard } from "../../../../functions/DeleteCard/DeleteCard.ts";
 
 interface CardProps {
     title: string;
