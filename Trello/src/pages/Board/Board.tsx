@@ -8,6 +8,8 @@ import CreateCardModal from "./components/CreateCardModal/CreateCardModal.tsx";
 import {deleteList} from "../../functions/DeleteList/DeleteList.ts"
 import {deleteBoard} from "../../functions/DeleteBoard/DeleteBoard.ts";
 import api from "../../api/request.ts";
+import {editBoard} from "../../functions/EditBoard/EditBoard.ts";
+import {editList} from "../../functions/EditList/EditList.ts";
 
 function Board() {
     const { board_id } = useParams();
@@ -85,13 +87,46 @@ function Board() {
         navigate('/');
     }
 
+    const handleEditBoard = async () => {
+        const newTitle = window.prompt("Enter new board title:", board.title);
+        if (!newTitle || newTitle.trim() === "" || newTitle === board?.title) {
+            return;
+        }
+
+        await editBoard(board_id, newTitle);
+        if (board) {
+            setBoard({ ...board, title: newTitle });
+        }
+    };
+
+    const handleEditList = async (listId: number) => {
+        const currentList = lists.find(l => l.id === listId);
+        const currentTitle = currentList ? currentList.title : "";
+
+        const newTitle = window.prompt("Enter new list title:", currentTitle);
+
+        if (!newTitle || newTitle.trim() === "" || newTitle === currentTitle) {
+            return;
+        }
+        await editList(board_id, listId, newTitle);
+        setLists(prevLists => prevLists.map(list => {
+            if (list.id === listId) {
+                return { ...list, title: newTitle };
+            }
+            return list;
+        }));
+    }
+
     if (!board) return <div>Завантаження...</div>;
 
     return (
         <div className="board">
             <div className="title">
                 <h1>{`${board.title}(ID: ${board_id})`}</h1>
-                <button onClick={() => handleBoardDelete(board_id)} className="delete-btn">❌</button>
+                <div className="control-btn">
+                    <button onClick={() => handleBoardDelete(board_id)} className="delete-btn">❌</button>
+                    <button className="edit-btn" onClick={() => handleEditBoard(board_id)}>✏️</button>
+                </div>
             </div>
 
             <div className="lists-container">
@@ -114,6 +149,7 @@ function Board() {
                             }));
                         }}
                         onListDelete={handleListDelete}
+                        onListEdit={handleEditList}
                     />
                 ))}
                 <button className="add-list-btn" onClick={() => setIsListModalOpen(true)}>+ add new list</button>

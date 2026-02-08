@@ -1,25 +1,24 @@
-import type { IList } from "../../../../common/interfaces/IList.ts";
+import type { ICard } from "../../../../common/interfaces/ICard.ts";
 import CardComponent from "../Card/Card.tsx";
 
-interface ListProps extends IList {
+interface ListProps{
     boardId: number;
     onCardDelete: (cardId: number) => void;
-    onListDelete: (listId: number) => void; // ✅ Ти це додала, супер
+    onListDelete: (listId: number) => void;
+    onListEdit: (listId: number) => void;
+    title: string;
+    cards: ICard[];
+    id: number
 }
 
-function List({ title, cards, boardId, onCardDelete, onListDelete, id }: ListProps) {
+function List({ title, cards, boardId, onCardDelete, onListDelete, onListEdit, id }: ListProps) {
     return (
         <div className={"list_class"}>
-
             <div className={"list-header"}>
                 <div className="list__title">
                     <span>{title}</span>
-                    <button
-                        className="delete-btn"
-                        onClick={() => onListDelete(id)}
-                    >
-                        ❌
-                    </button>
+                    <button className="delete-btn" onClick={() => onListDelete(id)}>❌</button>
+                    <button className="edit-btn" onClick={() => onListEdit(id)}>✏️</button>
                 </div>
             </div>
 
