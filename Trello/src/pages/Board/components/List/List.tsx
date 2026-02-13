@@ -1,5 +1,6 @@
 import type { ICard } from "../../../../common/interfaces/ICard.ts";
 import CardComponent from "../Card/Card.tsx";
+import React from "react"
 
 interface ListProps {
     id: number;
@@ -10,11 +11,27 @@ interface ListProps {
     onListEdit: (listId: number) => void;
     onCardDelete: (cardId: number) => void;
     onCardEdit: (cardId: number) => void;
+    onCardMove: (cardId: number, currentListId: number, newListId: number) => void;
 }
 
-function List({title, cards, boardId, id, onCardDelete, onListDelete, onListEdit, onCardEdit}: ListProps) {
+function List({title, cards, boardId, id, onCardDelete, onListDelete, onListEdit, onCardEdit, onCardMove}: ListProps) {
+    function DragStart(e: React.DragEvent, cardId: number) {
+        e.dataTransfer.setData("cardId", cardId.toString());
+        e.dataTransfer.setData("currentListId", id.toString());
+    }
+    function DragOver (e: React.DragEvent) {
+        e.preventDefault();
+    }
+
+    function DragDrop(e: React.DragEvent){
+        e.preventDefault();
+        let cardId = Number(e.dataTransfer.getData("cardId"));
+        let currentListId = Number(e.dataTransfer.getData("currentListId"));
+        onCardMove(cardId, currentListId, id);
+    }
+
     return (
-        <div className="list_class">
+        <div className="list_class" onDragOver={DragOver} onDrop={DragDrop}>
             <div className="list-header">
                 <div className="list__title">
                     <span>{title}</span>
@@ -27,13 +44,15 @@ function List({title, cards, boardId, id, onCardDelete, onListDelete, onListEdit
 
             <div className="list__cards">
                 {cards.map(card => (
-                    <CardComponent
-                        key={card.id}
-                        cardId={card.id}
-                        title={card.title}
-                        onDelete={onCardDelete}
-                        onEdit={onCardEdit}
-                    />
+                    <div key={card.id} draggable={true} onDragStart={(e) => DragStart(e, card.id)}>
+                        <CardComponent
+                            key={card.id}
+                            cardId={card.id}
+                            title={card.title}
+                            onDelete={onCardDelete}
+                            onEdit={onCardEdit}
+                        />
+                    </div>
                 ))}
             </div>
         </div>

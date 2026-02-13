@@ -173,7 +173,30 @@ function Board() {
         }));
     };
 
-    if (!board) return <div>Завантаження...</div>;
+    const handleCardMove = (cardId: number, currentListId: number, newListId: number) => {
+        if (currentListId === newListId) return;
+
+        setLists((prevLists) => {
+            let currentList = prevLists.find((l) => l.id === currentListId);
+
+            if (!currentList) return prevLists;
+
+            let card = currentList.cards.find((c) => c.id === cardId);
+            if (!card) return prevLists;
+
+            return prevLists.map(list => {
+                if (list.id === currentListId) {
+                    return {...list, cards: list.cards.filter(c => c.id !== cardId)};
+                }
+                if (list.id === newListId) {
+                    return {...list, cards: [...list.cards, card!]};
+                }
+                return list;
+            });
+        });
+    }
+
+    if (!board) return <div>Loading...</div>;
 
     return (
         <div className="board">
@@ -197,6 +220,7 @@ function Board() {
                         onListDelete={handleListDelete}
                         onListEdit={handleEditList}
                         onCardEdit={(cardId) => handleEditCard(list.id, cardId)}
+                        onCardMove={handleCardMove}
                     />
                 ))}
 
