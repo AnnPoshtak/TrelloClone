@@ -5,7 +5,7 @@ Created within the boundaries of the school **Sh++**.
 
 ### How to launch the project:
 
-1. Download the repository files and go to the copied repo:
+1.Download the repository files and go to the copied repo:
 ```bash
 git clone [https://github.com/AnnPoshtak/TrelloClone](https://github.com/AnnPoshtak/TrelloClone)
 cd TrelloClone/Trello
