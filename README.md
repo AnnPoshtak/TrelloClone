@@ -9,6 +9,7 @@ Created within the boundaries of the school **Sh++**.
 ```bash
 git clone [https://github.com/AnnPoshtak/TrelloClone](https://github.com/AnnPoshtak/TrelloClone)
 cd TrelloClone/Trello
+```
 
 2.Install dependencies and run:
 ```bash
