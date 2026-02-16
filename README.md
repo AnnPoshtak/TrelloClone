@@ -13,6 +13,6 @@ cd TrelloClone/Trello
 
 2.Install dependencies and run:
 ```bash
-nom install 
+npm install 
 npm run dev
 ```
