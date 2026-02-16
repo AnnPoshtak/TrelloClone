@@ -36,8 +36,12 @@ div[class^="list"] {
 }
 
 .list__title {
-  margin: 5px 0 15px 5px;
   color: #000000;
+  max-width: 250px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction:row;
 }
 
 .list__cards {
@@ -62,6 +66,10 @@ div[class^="list"] {
 
 .card{
   word-break: break-all;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 }
 
 button, {
@@ -128,7 +136,7 @@ button:hover {
   border: 3px solid black;
 }
 
-.delete-btn{
+.delete-btn, .edit-btn{
   background-color: transparent;
   font-size: 10px;
   margin: 0;

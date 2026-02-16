@@ -26,6 +26,7 @@ function Board() {
         async function fetchBoardData() {
             if (!board_id) return;
             const response = await api.get(`/board/${board_id}`);
+            console.table(response)
             setBoard(response);
             if (response.lists) setLists(response.lists);
         }
@@ -35,12 +36,16 @@ function Board() {
     async function handleCreateList(title: string) {
         if (!board_id) return;
         const newPosition = lists.length + 1;
+
         const response = await api.post(`/board/${board_id}/list`, {
             title: title,
             position: newPosition
         });
+
+        const data = response.data || response;
+
         const newList: IList = {
-            id: response.id || Date.now(),
+            id: data.id,
             title: title,
             cards: []
         };
@@ -173,29 +178,33 @@ function Board() {
         }));
     };
 
-    const handleCardMove = (cardId: number, currentListId: number, newListId: number) => {
+    const handleCardMove = async (cardId: number, currentListId: number, newListId: number) => {
         if (currentListId === newListId) return;
 
+        const currentList = lists.find((l) => l.id === currentListId);
+        const cardToMove = currentList?.cards.find((c) => c.id === cardId);
+        const targetList = lists.find((l) => l.id === newListId);
+
+        if (!cardToMove || !board_id || !targetList) return;
+        const newPosition = targetList.cards.length + 1;
         setLists((prevLists) => {
-            let currentList = prevLists.find((l) => l.id === currentListId);
-
-            if (!currentList) return prevLists;
-
-            let card = currentList.cards.find((c) => c.id === cardId);
-            if (!card) return prevLists;
-
             return prevLists.map(list => {
                 if (list.id === currentListId) {
                     return {...list, cards: list.cards.filter(c => c.id !== cardId)};
                 }
                 if (list.id === newListId) {
-                    return {...list, cards: [...list.cards, card!]};
+                    return {...list, cards: [...list.cards, { ...cardToMove, position: newPosition }]};
                 }
                 return list;
             });
         });
+        const load = [{
+                id: cardId,
+                position: newPosition,
+                list_id: newListId
+            }];
+        await api.put(`/board/${board_id}/card`, load);
     }
-
     if (!board) return <div>Loading...</div>;
 
     return (

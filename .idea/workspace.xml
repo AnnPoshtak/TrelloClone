@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="ca63ac36-261d-409b-9e21-4114ba43760c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Trello/src/api/request.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Trello/src/common/constants/api.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Trello/src/common/constants/index.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Trello/src/pages/Home/components/modal/Modal.tsx" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Trello/src/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/Trello/src/index.scss" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Trello/src/pages/Board/Board.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Trello/src/pages/Board/Board.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Trello/src/pages/Home/Home.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Trello/src/pages/Home/Home.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,6 +106,23 @@
       <workItem from="1770120998491" duration="2519000" />
       <workItem from="1770123775310" duration="826000" />
       <workItem from="1770126209412" duration="140000" />
+      <workItem from="1770484913499" duration="1147000" />
+      <workItem from="1770553598030" duration="520000" />
+      <workItem from="1770554158153" duration="1966000" />
+      <workItem from="1770563865775" duration="1575000" />
+      <workItem from="1770572434181" duration="443000" />
+      <workItem from="1770573072605" duration="335000" />
+      <workItem from="1770992648781" duration="2804000" />
+      <workItem from="1771002461797" duration="2862000" />
+      <workItem from="1771053431851" duration="979000" />
+      <workItem from="1771070918184" duration="545000" />
+      <workItem from="1771071656169" duration="348000" />
+      <workItem from="1771072362826" duration="618000" />
+      <workItem from="1771079137401" duration="290000" />
+      <workItem from="1771092012908" duration="2611000" />
+      <workItem from="1771228668128" duration="28000" />
+      <workItem from="1771248543916" duration="1867000" />
+      <workItem from="1771257320122" duration="905000" />
     </task>
     <servers />
   </component>
