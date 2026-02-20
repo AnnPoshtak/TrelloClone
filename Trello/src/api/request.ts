@@ -5,9 +5,22 @@ const instance = axios.create({
     baseURL: api.baseURL,
     headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer 123',
     },
 });
+
+instance.interceptors.request.use(
+    (config) => {
+        const token = localStorage.getItem('token');
+        if (token && config.headers) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
+
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
 
 instance.interceptors.response.use((res) => res.data);
 

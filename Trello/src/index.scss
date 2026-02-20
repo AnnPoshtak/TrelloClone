@@ -153,3 +153,78 @@ button:hover {
   left: 0;
   margin: 0;
 }
+
+.error-message{
+  color: #d32f2f;
+  background-color: #ffebee;
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  h1 {
+    color: #000;
+    margin-bottom: 24px;
+    font-weight: bold;
+  }
+
+  p {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555;
+
+    a {
+      color: #000;
+      font-weight: 600;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+}
+
+.auth-form {
+  background-color: #ebecf0;
+  padding: 30px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+
+  input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 16px;
+    transition: border-color 0.2s;
+
+    &:focus {
+      outline: none;
+      border-color: #555;
+      box-shadow: 0 0 0 2px rgba(85, 85, 85, 0.1);
+    }
+  }
+
+  button {
+    margin-top: 10px;
+    width: 100%;
+    margin-right: 0;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+}
