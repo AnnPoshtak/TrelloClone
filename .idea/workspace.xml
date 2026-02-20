@@ -4,16 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="ca63ac36-261d-409b-9e21-4114ba43760c" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Trello/src/pages/Login/Login.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Trello/src/pages/Register/Register.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Trello/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Trello/package-lock.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Trello/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Trello/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Trello/src/App.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/Trello/src/App.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Trello/src/api/request.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Trello/src/api/request.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Trello/src/index.scss" beforeDir="false" afterPath="$PROJECT_DIR$/Trello/src/index.scss" afterDir="false" />
-    </list>
+    <list default="true" id="ca63ac36-261d-409b-9e21-4114ba43760c" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -135,6 +126,7 @@
       <workItem from="1771602483440" duration="157000" />
       <workItem from="1771610345201" duration="484000" />
       <workItem from="1771611238676" duration="27000" />
+      <workItem from="1771616594809" duration="572000" />
     </task>
     <servers />
   </component>
