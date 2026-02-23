@@ -12,6 +12,7 @@ import api from "../../api/request.ts";
 import { editBoard } from "../../functions/EditBoard/EditBoard.ts";
 import { editList } from "../../functions/EditList/EditList.ts";
 import { editCard } from "../../functions/EditCard/EditCard.ts";
+import toast from "react-hot-toast";
 
 function Board() {
     const { board_id } = useParams();
@@ -19,16 +20,34 @@ function Board() {
     const [board, setBoard] = useState<IBoard | null>(null);
     const [isListModalOpen, setIsListModalOpen] = useState(false);
     const [isCardModalOpen, setIsCardModalOpen] = useState(false);
-
     const [lists, setLists] = useState<IList[]>([]);
 
     useEffect(() => {
         async function fetchBoardData() {
             if (!board_id) return;
-            const response = await api.get(`/board/${board_id}`);
-            console.table(response)
-            setBoard(response);
-            if (response.lists) setLists(response.lists);
+
+            try {
+                const response = await api.get(`/board/${board_id}`);
+                console.table(response);
+                setBoard(response);
+                if (response.lists) setLists(response.lists);
+            } catch (err: any) {
+                console.error(err);
+                if (err.response) {
+                    const status = err.response.status;
+                    if (status === 401) {
+                        toast.error("Unauthorized");
+                    } else if (status === 404) {
+                        toast.error("Board not found");
+                    } else {
+                        toast.error("Failed to load board data");
+                    }
+                } else if (err.request) {
+                    toast.error("Network error. Please check your connection");
+                } else {
+                    toast.error("An error occurred: " + err.message);
+                }
+            }
         }
         fetchBoardData();
     }, [board_id]);
@@ -37,21 +56,38 @@ function Board() {
         if (!board_id) return;
         const newPosition = lists.length + 1;
 
-        const response = await api.post(`/board/${board_id}/list`, {
-            title: title,
-            position: newPosition
-        });
+        try {
+            const response = await api.post(`/board/${board_id}/list`, {
+                title: title,
+                position: newPosition
+            });
 
-        const data = response.data || response;
+            const data = response.data || response;
 
-        const newList: IList = {
-            id: data.id,
-            title: title,
-            cards: []
-        };
+            const newList: IList = {
+                id: data.id,
+                title: title,
+                cards: []
+            };
 
-        setLists([...lists, newList]);
-        setIsListModalOpen(false);
+            setLists([...lists, newList]);
+            setIsListModalOpen(false);
+            toast.success("List created successfully");
+        } catch (err: any) {
+            console.error(err);
+            if (err.response) {
+                const status = err.response.status;
+                if (status === 400) {
+                    toast.error("Invalid list data");
+                } else {
+                    toast.error("Failed to create list");
+                }
+            } else if (err.request) {
+                toast.error("Network error. Please check your connection");
+            } else {
+                toast.error("An error occurred: " + err.message);
+            }
+        }
     }
 
     async function handleCreateCard(title: string, listId: number) {
@@ -68,50 +104,120 @@ function Board() {
             description: "",
         };
 
-        const response = await api.post(`/board/${board_id}/card`, load);
-        const serverData = response.data || response;
-        const newCard = {
-            ...load,
-            ...serverData,
-        };
-        setLists(prevLists => prevLists.map(list => {
-            if (list.id === listId) {
-                return {
-                    ...list,
-                    cards: [...list.cards, newCard]
-                };
+        try {
+            const response = await api.post(`/board/${board_id}/card`, load);
+            const serverData = response.data || response;
+            const newCard = {
+                ...load,
+                ...serverData,
+            };
+            setLists(prevLists => prevLists.map(list => {
+                if (list.id === listId) {
+                    return {
+                        ...list,
+                        cards: [...list.cards, newCard]
+                    };
+                }
+                return list;
+            }));
+            setIsCardModalOpen(false);
+            toast.success("Card created successfully");
+        } catch (err: any) {
+            console.error(err);
+            if (err.response) {
+                const status = err.response.status;
+                if (status === 400) {
+                    toast.error("Invalid card data");
+                } else {
+                    toast.error("Failed to create card");
+                }
+            } else if (err.request) {
+                toast.error("Network error. Please check your connection");
+            } else {
+                toast.error("An error occurred: " + err.message);
             }
-            return list;
-        }));
-        setIsCardModalOpen(false);
+        }
     }
 
     const handleCardDelete = async (listId: number, cardId: number) => {
         if (!board_id) return;
-        await deleteCard(board_id, cardId);
 
-        setLists(prevLists => prevLists.map(l => {
-            if (l.id === listId) {
-                return {
-                    ...l,
-                    cards: l.cards.filter(c => c.id !== cardId)
-                };
+        try {
+            await deleteCard(board_id, cardId);
+            setLists(prevLists => prevLists.map(l => {
+                if (l.id === listId) {
+                    return {
+                        ...l,
+                        cards: l.cards.filter(c => c.id !== cardId)
+                    };
+                }
+                return l;
+            }));
+            toast.success("Card deleted");
+        } catch (err: any) {
+            console.error(err);
+            if (err.response) {
+                const status = err.response.status;
+                if (status === 404) {
+                    toast.error("Card not found");
+                } else {
+                    toast.error("Failed to delete card");
+                }
+            } else if (err.request) {
+                toast.error("Network error");
+            } else {
+                toast.error("An error occurred: " + err.message);
             }
-            return l;
-        }));
+        }
     };
 
     const handleListDelete = async (listId: number) => {
         if (!board_id) return;
-        await deleteList(board_id, listId);
-        setLists(prevLists => prevLists.filter(list => list.id !== listId));
+
+        try {
+            await deleteList(board_id, listId);
+            setLists(prevLists => prevLists.filter(list => list.id !== listId));
+            toast.success("List deleted");
+        } catch (err: any) {
+            console.error(err);
+            if (err.response) {
+                const status = err.response.status;
+                if (status === 404) {
+                    toast.error("List not found");
+                } else {
+                    toast.error("Failed to delete list");
+                }
+            } else if (err.request) {
+                toast.error("Network error");
+            } else {
+                toast.error("An error occurred: " + err.message);
+            }
+        }
     };
 
     const handleBoardDelete = async () => {
         if (!board_id) return;
-        await deleteBoard(board_id);
-        navigate('/');
-    }
+
+        try {
+            await deleteBoard(board_id);
+            toast.success("Board deleted");
+            navigate('/');
+        } catch (err: any) {
+            console.error(err);
+            if (err.response) {
+                const status = err.response.status;
+                if (status === 404) {
+                    toast.error("Board not found");
+                } else {
+                    toast.error("Failed to delete board");
+                }
+            } else if (err.request) {
+                toast.error("Network error");
+            } else {
+                toast.error("An error occurred: " + err.message);
+            }
+        }
+    };
 
     const handleEditBoard = async () => {
         if (!board_id || !board) return;
@@ -120,8 +226,25 @@ function Board() {
             return;
         }
 
-        await editBoard(board_id, newTitle);
-        setBoard({ ...board, title: newTitle });
+        try {
+            await editBoard(board_id, newTitle);
+            setBoard({ ...board, title: newTitle });
+            toast.success("Board updated");
+        } catch (err: any) {
+            console.error(err);
+            if (err.response) {
+                const status = err.response.status;
+                if (status === 400) {
+                    toast.error("Invalid title");
+                } else {
+                    toast.error("Failed to update board");
+                }
+            } else if (err.request) {
+                toast.error("Network error");
+            } else {
+                toast.error("An error occurred: " + err.message);
+            }
+        }
     };
 
     const handleEditList = async (listId: number) => {
@@ -134,14 +257,32 @@ function Board() {
         if (!newTitle || newTitle.trim() === "" || newTitle === currentTitle) {
             return;
         }
-        await editList(board_id, listId, newTitle);
-        setLists(prevLists => prevLists.map(list => {
-            if (list.id === listId) {
-                return { ...list, title: newTitle };
+
+        try {
+            await editList(board_id, listId, newTitle);
+            setLists(prevLists => prevLists.map(list => {
+                if (list.id === listId) {
+                    return { ...list, title: newTitle };
+                }
+                return list;
+            }));
+            toast.success("List updated");
+        } catch (err: any) {
+            console.error(err);
+            if (err.response) {
+                const status = err.response.status;
+                if (status === 400) {
+                    toast.error("Invalid title");
+                } else {
+                    toast.error("Failed to update list");
+                }
+            } else if (err.request) {
+                toast.error("Network error");
+            } else {
+                toast.error("An error occurred: " + err.message);
             }
-            return list;
-        }));
-    }
+        }
+    };
 
     const handleEditCard = async (listId: number, cardId: number) => {
         if (!board_id) return;
@@ -160,22 +301,40 @@ function Board() {
             position: card.position,
             description: card.description
         };
-        await editCard(board_id, cardId, load);
 
-        setLists(prevLists => prevLists.map(currentList => {
-            if (currentList.id === listId) {
-                return {
-                    ...currentList,
-                    cards: currentList.cards.map(c => {
-                        if (c.id === cardId) {
-                            return { ...c, title: newTitle };
-                        }
-                        return c;
-                    })
-                };
+        try {
+            await editCard(board_id, cardId, load);
+
+            setLists(prevLists => prevLists.map(currentList => {
+                if (currentList.id === listId) {
+                    return {
+                        ...currentList,
+                        cards: currentList.cards.map(c => {
+                            if (c.id === cardId) {
+                                return { ...c, title: newTitle };
+                            }
+                            return c;
+                        })
+                    };
+                }
+                return currentList;
+            }));
+            toast.success("Card updated");
+        } catch (err: any) {
+            console.error(err);
+            if (err.response) {
+                const status = err.response.status;
+                if (status === 400) {
+                    toast.error("Invalid card data");
+                } else {
+                    toast.error("Failed to update card");
+                }
+            } else if (err.request) {
+                toast.error("Network error");
+            } else {
+                toast.error("An error occurred: " + err.message);
             }
-            return currentList;
-        }));
+        }
     };
 
     const handleCardMove = async (cardId: number, currentListId: number, newListId: number) => {
@@ -186,7 +345,9 @@ function Board() {
         const targetList = lists.find((l) => l.id === newListId);
 
         if (!cardToMove || !board_id || !targetList) return;
+
         const newPosition = targetList.cards.length + 1;
+
         setLists((prevLists) => {
             return prevLists.map(list => {
                 if (list.id === currentListId) {
@@ -198,13 +359,32 @@ function Board() {
                 return list;
             });
         });
+
         const load = [{
-                id: cardId,
-                position: newPosition,
-                list_id: newListId
-            }];
-        await api.put(`/board/${board_id}/card`, load);
-    }
+            id: cardId,
+            position: newPosition,
+            list_id: newListId
+        }];
+
+        try {
+            await api.put(`/board/${board_id}/card`, load);
+        } catch (err: any) {
+            console.error(err);
+            if (err.response) {
+                const status = err.response.status;
+                if (status === 400) {
+                    toast.error("Failed to move card: Invalid data");
+                } else {
+                    toast.error("Failed to move card on server");
+                }
+            } else if (err.request) {
+                toast.error("Network error");
+            } else {
+                toast.error("An error occurred: " + err.message);
+            }
+        }
+    };
+
     if (!board) return <div>Loading...</div>;
 
     return (

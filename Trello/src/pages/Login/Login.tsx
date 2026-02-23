@@ -11,23 +11,48 @@ function Login() {
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        if (!email.trim() || !password.trim()) {
+            toast.error("Please fill in all fields");
+            return;
+        }
+
         try {
             const response = await api.post('/login', {
                 email: email,
                 password: password
             });
-            const token = response.data.token;
+            const token = response.token;
+            console.log(token);
+            console.log(response);
 
             if (token) {
                 localStorage.setItem('token', token);
+                toast.success("Login successful");
                 navigate('/');
             } else {
-                toast.error("Login failed");
+                toast.error("Authentication failed");
             }
 
-        } catch (err) {
+        } catch (err: any) {
             console.error(err);
-            toast.error("Email or password incorrect");
+
+            if (err.response) {
+                const status = err.response.status;
+
+                if (status === 400) {
+                    toast.error("Invalid request");
+                } else if (status === 401) {
+                    toast.error("Invalid email or password");
+                } else if (status === 404) {
+                    toast.error("User not found");
+                } else {
+                    toast.error("Server error. Please try again later");
+                }
+            } else if (err.request) {
+                toast.error("Network error. Please check your connection");
+            } else {
+                toast.error("An error occurred: " + err.message);
+            }
         }
     };
 
@@ -49,7 +74,7 @@ function Login() {
                 />
                 <button type="submit">Sign in</button>
             </form>
-            <p>Немає акаунту? <Link to="/register">Зареєструватися</Link></p>
+            <p>Don't have an account? <Link to="/register">Register</Link></p>
         </div>
     );
 }
