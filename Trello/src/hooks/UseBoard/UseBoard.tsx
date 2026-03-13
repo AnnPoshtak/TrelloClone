@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import type { IBoard } from "../../common/interfaces/IBoard.ts";
 import type { IList } from "../../common/interfaces/IList.ts";
 
-export function useBoard(board_id: string | undefined) {
+export function UseBoard(board_id: string | undefined) {
     const navigate = useNavigate();
     const [board, setBoard] = useState<IBoard | null>(null);
     const [lists, setLists] = useState<IList[]>([]);

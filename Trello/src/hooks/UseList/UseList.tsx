@@ -4,7 +4,7 @@ import { editList } from "../../functions/EditList/EditList.ts";
 import toast from "react-hot-toast";
 import type { IList } from "../../common/interfaces/IList.ts";
 
-export function useList(
+export function UseList(
     board_id: string | undefined, 
     lists: IList[], 
     setLists: React.Dispatch<React.SetStateAction<IList[]>>

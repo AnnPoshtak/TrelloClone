@@ -4,7 +4,7 @@ import type { IList } from "../../common/interfaces/IList.ts";
 import { deleteCard } from "../../functions/DeleteCard/DeleteCard.ts";
 import { editCard } from "../../functions/EditCard/EditCard.ts";
 
-export function useCard(
+export function UseCard(
     board_id: string | undefined,
     lists: IList[],
     setLists: React.Dispatch<React.SetStateAction<IList[]>>
