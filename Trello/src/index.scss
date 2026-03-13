@@ -17,15 +17,18 @@ body {
 .lists-container {
   display: flex;
   align-items: flex-start;
-  justify-content: space-around;
+  justify-content: flex-start;
   gap: 60px;
   padding-bottom: 20px;
   height: 400px;
+  overflow-x: auto;
 }
 
 .list_class {
   min-height: 200px;
   max-height: 350px;
+  min-width: 250px;
+  flex-shrink: 0;
   overflow-y: auto;
 }
 
@@ -40,15 +43,15 @@ div[class^="list"] {
   max-width: 250px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction:row;
+  justify-content: space-between;
+  flex-direction: row;
 }
 
 .list__cards {
   display: flex;
   flex-direction: column;
   gap: 8px;
-  overflow-x: auto;
+  overflow-y: auto;
 }
 
 .list__cards > div {
@@ -64,15 +67,16 @@ div[class^="list"] {
   box-shadow: 0 10px 15px rgba(0,0,0,0.2);
 }
 
-.card{
+.card {
   word-break: break-all;
   display: flex;
   flex-direction: row;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
-button, {
+button {
   margin-top: 20px;
   padding: 10px;
   background-color: #555;
@@ -83,7 +87,7 @@ button, {
   margin-right: 10px;
 }
 
-.add-list-btn{
+.add-list-btn {
   width: 90%;
   position: absolute;
   bottom: 20px;
@@ -91,7 +95,7 @@ button, {
   transform: translatex(-50%);
 }
 
-.add-card-btn{
+.add-card-btn {
   width: 90%;
   position: absolute;
   bottom: 70px;
@@ -99,7 +103,7 @@ button, {
   transform: translatex(-50%);
 }
 
-.add-board-btn{
+.add-board-btn {
   width: 90%;
   position: absolute;
   bottom: 20px;
@@ -124,28 +128,29 @@ button, {
 button:hover {
   background-color: #777;
 }
+
 .modal-overlay {
   position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-
   background-color: white;
   padding: 20px;
   border-radius: 10px;
   border: 3px solid black;
 }
 
-.delete-btn, .edit-btn{
+.delete-btn, .edit-btn {
   background-color: transparent;
   font-size: 10px;
   margin: 0;
   border: none;
   position: relative;
   right: 0;
+  flex-shrink: 0;
 }
 
-.home-btn{
+.home-btn {
   width: 70px;
   height: 40px;
   position: absolute;
@@ -154,7 +159,7 @@ button:hover {
   margin: 0;
 }
 
-.error-message{
+.error-message {
   color: #d32f2f;
   background-color: #ffebee;
   padding: 10px;
@@ -169,28 +174,28 @@ button:hover {
   align-items: center;
   justify-content: center;
   padding: 20px;
+}
 
-  h1 {
-    color: #000;
-    margin-bottom: 24px;
-    font-weight: bold;
-  }
+.auth-container h1 {
+  color: #000;
+  margin-bottom: 24px;
+  font-weight: bold;
+}
 
-  p {
-    margin-top: 15px;
-    font-size: 14px;
-    color: #555;
+.auth-container p {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #555;
+}
 
-    a {
-      color: #000;
-      font-weight: 600;
-      text-decoration: none;
+.auth-container p a {
+  color: #000;
+  font-weight: 600;
+  text-decoration: none;
+}
 
-      &:hover {
-        text-decoration: underline;
-      }
-    }
-  }
+.auth-container p a:hover {
+  text-decoration: underline;
 }
 
 .auth-form {
@@ -203,33 +208,33 @@ button:hover {
   width: 100%;
   max-width: 400px;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-
-  input {
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    font-size: 16px;
-    transition: border-color 0.2s;
-
-    &:focus {
-      outline: none;
-      border-color: #555;
-      box-shadow: 0 0 0 2px rgba(85, 85, 85, 0.1);
-    }
-  }
-
-  button {
-    margin-top: 10px;
-    width: 100%;
-    margin-right: 0;
-    font-size: 16px;
-    font-weight: bold;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
 }
 
-.button-logout{
+.auth-form input {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 16px;
+  transition: border-color 0.2s;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: #555;
+  box-shadow: 0 0 0 2px rgba(85, 85, 85, 0.1);
+}
+
+.auth-form button {
+  margin-top: 10px;
+  width: 100%;
+  margin-right: 0;
+  font-size: 16px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.button-logout {
   background-color: transparent;
   border: none;
   color: black;
