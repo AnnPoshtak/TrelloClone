@@ -8,7 +8,15 @@ export const useRegister = () => {
     const emailRegex = /^((([0-9A-Za-z]{1}[-0-9A-z\.]{1,}[0-9A-Za-z]{1})|([0-9А-Яа-я]{1}[-0-9А-я\.]{1,}[0-9А-Яа-я]{1}))@([-A-Za-z]{1,}\.){1,2}[-A-Za-z]{2,})$/u;
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$/;
 
-
+    const registerMutation = async (email: string, password: string) => {
+        try {
+            const response = await api.post('/user', { email, password });
+            return response.data;
+        } catch (error) {
+            console.error(error);
+            throw error;
+        }
+    };
 
     const Register = async (email: string, password: string, repeatPassword: string) => {
 
@@ -28,34 +36,12 @@ export const useRegister = () => {
         }
 
         try {
-            await api.post('/user', {
-                email: email,
-                password: password
-            });
-
+            await registerMutation(email, password);
             toast.success("Registration successful!");
             navigate('/login');
-
-        } catch (err: any) {
-            console.error(err);
-
-            if (err.response) {
-                const status = err.response.status;
-
-                if (status === 400) {
-                    toast.error("Invalid registration data");
-                } else if (status === 409) {
-                    toast.error("User with this email already exists");
-                } else if (status === 422) {
-                    toast.error("Validation failed");
-                } else {
-                    toast.error("Server error. Please try again later");
-                }
-            } else if (err.request) {
-                toast.error("Network error. Please check your connection");
-            } else {
-                toast.error("An error occurred: " + err.message);
-            }
+        } catch (error) {
+            console.error(error);
+            toast.error("Registration failed");
         }
     };
     return { Register }

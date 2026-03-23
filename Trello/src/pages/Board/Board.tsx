@@ -4,20 +4,21 @@ import List from "./components/List/List.tsx";
 import CreateListModal from "./components/CreateListModal/CreateListModal.tsx";
 import CreateCardModal from "./components/CreateCardModal/CreateCardModal.tsx";
 
-import { UseBoard } from "../../hooks/useBoard/UseBoard.tsx";
-import { UseList } from "../../hooks/useList/UseList.tsx";
-import { UseCard } from "../../hooks/useCard/UseCard.tsx";
+import { useBoard } from "../../hooks/UseBoard/UseBoard.tsx";
+import { useList } from "../../hooks/UseList/UseList.tsx";
+import { useCard } from "../../hooks/UseCard/UseCard.tsx";
 
 function Board() {
     const { board_id } = useParams();
     const [isListModalOpen, setIsListModalOpen] = useState(false);
     const [isCardModalOpen, setIsCardModalOpen] = useState(false);
 
-    const { board, lists, setLists, handleBoardDelete, handleEditBoard } = UseBoard(board_id);
-    const { handleCreateList, handleListDelete, handleEditList } = UseList(board_id, lists, setLists);
-    const { handleCreateCard, handleCardDelete, handleEditCard, handleCardMove } = UseCard(board_id, lists, setLists);
+    const { board, lists, isLoading, isError, handleBoardDelete, handleEditBoard } = useBoard(board_id);
+    const { handleCreateList, handleListDelete, handleEditList } = useList(board_id, lists);
+    const { handleCreateCard, handleCardDelete, handleEditCard, handleCardMove } = useCard(board_id, lists);
 
-    if (!board) return <div>Loading...</div>;
+    if (isLoading) return <div>Loading...</div>;
+    if (isError || !board) return <div>Error loading board data</div>; 
 
     return (
         <div className="board">

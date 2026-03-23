@@ -3,51 +3,78 @@ import { deleteList } from "../../functions/DeleteList/DeleteList.ts";
 import { editList } from "../../functions/EditList/EditList.ts";
 import toast from "react-hot-toast";
 import type { IList } from "../../common/interfaces/IList.ts";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
-export function UseList(
-    board_id: string | undefined, 
-    lists: IList[], 
-    setLists: React.Dispatch<React.SetStateAction<IList[]>>
-) {
-    const handleCreateList = async (title: string, onSuccess: () => void) => {
-        if (!board_id) return;
-        try {
+export function useList(board_id: string | undefined, lists: IList[]) {
+    const queryClient = useQueryClient();
+
+    const createListMutation = useMutation({
+        mutationFn: async (title: string) => {
+            if (!board_id) throw new Error("Board ID is required");
             const response = await api.post(`/board/${board_id}/list`, {
-                title, position: lists.length + 1
+                title, 
+                position: lists.length + 1
             });
-            const data = response.data || response;
-            setLists([...lists, { id: data.id, title, cards: [] }]);
+            return response.data;
+        },
+        onSuccess: () => {
             toast.success("List created successfully");
-            onSuccess();
-        } catch (err) {
+            queryClient.invalidateQueries({ queryKey: ["board", board_id] });
+        },
+        onError: () => {
             toast.error("Failed to create list");
         }
+    });
+
+    const handleCreateList = (title: string, onSuccessModal: () => void) => {
+        createListMutation.mutate(title, {
+            onSuccess: () => onSuccessModal()
+        });
     };
 
-    const handleListDelete = async (listId: number) => {
-        if (!board_id) return;
-        try {
+    const deleteListMutation = useMutation({
+        mutationFn: async (listId: number) => {
+            if (!board_id) throw new Error("Board ID is required");
             await deleteList(board_id, listId);
-            setLists(prev => prev.filter(list => list.id !== listId));
-            toast.success("List deleted");
-        } catch (err) {
+        },
+        onSuccess: () => {
+            toast.success("List deleted successfully");
+            queryClient.invalidateQueries({ queryKey: ["board", board_id] });
+        },
+        onError: () => {
             toast.error("Failed to delete list");
         }
+    });
+
+    const handleListDelete = (listId: number) => {
+        if (!board_id) return;
+        deleteListMutation.mutate(listId);
     };
 
-    const handleEditList = async (listId: number) => {
-        if (!board_id) return;
-        const currentList = lists.find(l => l.id === listId);
-        const newTitle = window.prompt("Enter new list title:", currentList?.title);
-        if (!newTitle || newTitle === currentList?.title) return;
-
-        try {
-            await editList(board_id, listId, newTitle);
-            setLists(prev => prev.map(list => list.id === listId ? { ...list, title: newTitle } : list));
-            toast.success("List updated");
-        } catch (err) {
+    const editListMutation = useMutation({
+        mutationFn: async ({ listId, title }: { listId: number; title: string }) => {
+            if (!board_id) throw new Error("Board ID is required");
+            await editList(board_id, listId, title);
+        },
+        onSuccess: () => {
+            toast.success("List updated successfully");
+            queryClient.invalidateQueries({ queryKey: ["board", board_id] });
+        },
+        onError: () => {
             toast.error("Failed to update list");
         }
+    });
+
+    const handleEditList = (listId: number) => {
+        if (!board_id) return;
+        
+        const listToEdit = lists.find((list) => list.id === listId);
+        if (!listToEdit) return;
+
+        const newTitle = window.prompt("Enter new list title:", listToEdit.title);
+        if (!newTitle || newTitle.trim() === "" || newTitle === listToEdit.title) return;
+
+        editListMutation.mutate({ listId, title: newTitle });
     };
 
     return { handleCreateList, handleListDelete, handleEditList };

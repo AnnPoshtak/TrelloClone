@@ -3,7 +3,7 @@ import {useNavigate} from "react-router-dom";
 import { Link } from "react-router-dom";
 import type { IBoard } from "../../common/interfaces/IBoard.ts";
 import BoardComponent from "./components/BoardComponent/BoardComponent.tsx";
-import Modal from "./components/Modal/Modal.tsx";
+import Modal from "./components/modal/Modal.tsx";
 import api from "../../api/request.ts";
 import toast from "react-hot-toast";
 
