@@ -4,9 +4,9 @@ import List from "./components/List/List.tsx";
 import CreateListModal from "./components/CreateListModal/CreateListModal.tsx";
 import CreateCardModal from "./components/CreateCardModal/CreateCardModal.tsx";
 
-import { useBoard } from "../../hooks/useBoard/UseBoard.tsx";
-import { useList } from "../../hooks/useList/UseList.tsx";
-import { useCard } from "../../hooks/useCard/UseCard.tsx";
+import { useBoard } from "../../hooks/UseBoard/UseBoard.tsx";
+import { useList } from "../../hooks/UseList/UseList.tsx";
+import { useCard } from "../../hooks/UseCard/UseCard.tsx";
 
 function Board() {
     const { board_id } = useParams();

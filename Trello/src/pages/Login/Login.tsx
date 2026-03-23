@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { UseLogin } from "../../hooks/useLogin/UseLogin.tsx";
+import { useLogin } from "../../hooks/UseLogin/UseLogin.tsx";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const { login } = UseLogin();
+    const { login } = useLogin();
 
     const handleLogin = (e: React.FormEvent) => {
         e.preventDefault();

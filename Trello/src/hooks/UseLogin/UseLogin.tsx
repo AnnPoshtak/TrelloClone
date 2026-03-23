@@ -3,35 +3,39 @@ import api from "../../api/request.ts";
 import toast from "react-hot-toast";
 import { useMutation } from "@tanstack/react-query";
 
-export function UseLogin() {
+export function useLogin() {
     const navigate = useNavigate();
 
     const loginMutation = useMutation({
         mutationFn: async ({ email, password }: { email: string; password: string }) => {
             const response = await api.post('/login', { email, password });
-            return response.data;
+            return response;
         },
         onSuccess: (data) => {
-            localStorage.setItem('token', data.token);
-            toast.success("Login successful");
-            navigate('/');
+            const token = data.token;
+            const refreshToken = data.refreshToken
+
+            if (token) {
+                localStorage.setItem('token', token);
+                localStorage.setItem('refreshToken', refreshToken);
+                toast.success("Login successful");
+                navigate('/');
+            } else {
+                toast.error("Login error")
+            }
         },
-        onError: () => {
+        onError: (error) => {
+            console.error("Помилка логіну:", error);
             toast.error("Login failed");
         }
     });
-
-    const login = async (email: string, password: string) => {
+    const login = (email: string, password: string) => {
         if (!email.trim() || !password.trim()) {
             toast.error("Please fill in all fields");
             return;
         }
 
-        try {
-            loginMutation.mutate({ email, password });
-        } catch (error) {
-            console.error(error);
-        }
+        loginMutation.mutate({ email, password });
     };
 
     return { login };
