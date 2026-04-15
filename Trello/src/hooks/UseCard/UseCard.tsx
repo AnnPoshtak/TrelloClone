@@ -1,8 +1,7 @@
 import toast from "react-hot-toast";
 import api from "../../api/request.ts";
 import type { IList } from "../../common/interfaces/IList.ts";
-import { deleteCard } from "../../functions/DeleteCard/DeleteCard.ts";
-import { editCard } from "../../functions/EditCard/EditCard.ts";
+import { deleteCard, editCard } from "../../services/card.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useCard(board_id: string | undefined, lists: IList[]) {

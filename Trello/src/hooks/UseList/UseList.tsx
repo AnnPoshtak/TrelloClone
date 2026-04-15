@@ -1,6 +1,5 @@
 import api from "../../api/request.ts";
-import { deleteList } from "../../functions/DeleteList/DeleteList.ts";
-import { editList } from "../../functions/EditList/EditList.ts";
+import { deleteList, editList } from "../../services/list.ts";
 import toast from "react-hot-toast";
 import type { IList } from "../../common/interfaces/IList.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

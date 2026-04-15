@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import api from "../../api/request.ts";
-import { deleteBoard } from "../../functions/DeleteBoard/DeleteBoard.ts";
-import { editBoard } from "../../functions/EditBoard/EditBoard.ts";
+import { deleteBoard, editBoard } from "../../services/board.ts";
 import toast from "react-hot-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { IBoard } from "../../common/interfaces/IBoard.ts";
