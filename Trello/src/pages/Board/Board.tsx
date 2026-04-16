@@ -28,11 +28,9 @@ function Board() {
     if (isError || !board) return <div>Error</div>; 
 
     const boardColor = board.custom?.background 
-        || (Array.isArray(board.custom) && board.custom[0]?.background) 
-        || "#6366f1";
 
     return (
-        <div className="board" style={{ "--board-color": boardColor } as React.CSSProperties}>
+        <div className="board"}>
             <div className="title">
                 <h1>{board.title}</h1>
                 <div className="title-actions">
