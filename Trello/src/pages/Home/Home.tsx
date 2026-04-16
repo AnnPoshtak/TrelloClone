@@ -62,21 +62,16 @@ function Home() {
             </div>
             
             <div className="board-container">
-                {boards.map((board) => {
-                    const boardColor = board.custom?.background 
-                        || (Array.isArray(board.custom) && board.custom[0]?.background) 
-                        || "#6366f1";
-
-                    return (
-                        <Link key={board.id} to={`/board/${board.id}`} style={{ textDecoration: 'none' }}>
-                            <div className="board-card" style={{ "--board-color": boardColor } as React.CSSProperties}>
-                                {board.title}
-                            </div>
-                        </Link>
-                    );
-                })}
+                {boards.map(board => (
+                    <BoardComponent
+                        key={board.id}
+                        title={board.title}
+                        custom={board.custom}
+                        board={board}
+                    />
+                ))}
             </div>
-            
+
             <div style={{ textAlign: 'center' }}>
                 <button className="add-board-btn" onClick={() => setModalStatus(true)}>+ New Board</button>
             </div>

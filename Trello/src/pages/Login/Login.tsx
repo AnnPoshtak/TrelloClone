@@ -1,34 +1,46 @@
-import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLogin } from "../../hooks/useLogin/useLogin.tsx";
+import { useForm, type SubmitHandler } from "react-hook-form";
+
+interface IFormInput {
+  email: string;   
+  password: string;
+}
 
 function Login() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const { 
+        register, 
+        handleSubmit, 
+        formState: { errors } 
+    } = useForm<IFormInput>();
 
     const { login } = useLogin();
 
-    const handleLogin = (e: React.FormEvent) => {
-        e.preventDefault();
-        login(email, password);
+    const onSubmit: SubmitHandler<IFormInput> = (data) => {
+        login(data.email, data.password);
     };
 
     return (
         <div className="auth-container">
             <h1>Login</h1>
-            <form onSubmit={handleLogin} className="auth-form">
+            <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
                 <input
                     type="email"
                     placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    {...register("email", { required: "Email is required" })}
                 />
+                {errors.email && <span className="error">{errors.email.message}</span>}
+
                 <input
                     type="password"
                     placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    {...register("password", { 
+                        required: "Password is required",
+                        minLength: { value: 6, message: "Min length is 6" }
+                    })}
                 />
+                {errors.password && <span className="error">{errors.password.message}</span>}
+
                 <button type="submit">
                     Sign in
                 </button>

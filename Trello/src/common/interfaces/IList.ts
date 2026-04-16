@@ -1,8 +1,8 @@
-import type {Card} from "./ICard.ts";
+import type {ICard} from "./ICard.ts";
 
 export interface IList {
     id: number;
     title: string;
-    cards: Card[];
+    cards: ICard[];
     boardId: number;
 }
