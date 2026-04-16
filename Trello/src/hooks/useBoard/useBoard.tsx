@@ -1,7 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import api from "../../api/request.ts";
-import { deleteBoard } from "../../functions/DeleteBoard/DeleteBoard.ts";
-import { editBoard } from "../../functions/EditBoard/EditBoard.ts";
+import { deleteBoard, editBoard } from "../../services/board.ts";
 import toast from "react-hot-toast";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import type { IBoard } from "../../common/interfaces/IBoard.ts";
@@ -14,7 +13,8 @@ export function useBoard(board_id: string | undefined) {
         queryKey: ["board", board_id],
         queryFn: async () => {
             try {
-                return await api.get(`/board/${board_id}`);
+                const response = await api.get(`/board/${board_id}`);
+                return response; 
             } catch (err: any) {
                 console.error(err);
                 toast.error("Failed to load board data");
@@ -28,7 +28,7 @@ export function useBoard(board_id: string | undefined) {
 
     const deleteMutation = useMutation({
         mutationFn: async (boardId: string) => {
-            await deleteBoard(boardId);
+            await deleteBoard(Number(boardId)); 
         },
         onSuccess: () => {
             toast.success("Board deleted");
@@ -46,7 +46,7 @@ export function useBoard(board_id: string | undefined) {
 
     const editMutation = useMutation({
         mutationFn: async ({ boardId, newTitle }: { boardId: string, newTitle: string }) => {
-            await editBoard(boardId, newTitle);
+            await editBoard(Number(boardId), newTitle);
         },
         onSuccess: () => {
             toast.success("Board updated");
@@ -57,11 +57,9 @@ export function useBoard(board_id: string | undefined) {
         }
     });
 
-    const handleEditBoard = async () => {
+    const handleEditBoard = async (newTitle: string) => {
         if (!board_id || !board) return;
-        const newTitle = window.prompt("Enter new board title:", board.title);
         if (!newTitle || newTitle.trim() === "" || newTitle === board.title) return;
-
         editMutation.mutate({ boardId: board_id, newTitle });
     };
 

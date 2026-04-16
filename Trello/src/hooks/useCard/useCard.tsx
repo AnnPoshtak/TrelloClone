@@ -1,8 +1,7 @@
 import toast from "react-hot-toast";
 import api from "../../api/request.ts";
 import type { IList } from "../../common/interfaces/IList.ts";
-import { deleteCard } from "../../functions/DeleteCard/DeleteCard.ts";
-import { editCard } from "../../functions/EditCard/EditCard.ts";
+import { deleteCard, editCard } from "../../services/card.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useCard(board_id: string | undefined, lists: IList[]) {
@@ -37,7 +36,7 @@ export function useCard(board_id: string | undefined, lists: IList[]) {
     const deleteCardMutation = useMutation({
         mutationFn: async (cardId: number) => {
             if (!board_id) throw new Error("Board ID is required");
-            await deleteCard(board_id, cardId);
+            await deleteCard(Number(board_id), cardId);
         },
         onSuccess: () => {
             toast.success("Card deleted successfully");
@@ -55,7 +54,7 @@ export function useCard(board_id: string | undefined, lists: IList[]) {
     const editCardMutation = useMutation({
         mutationFn: async ({ cardId, payload }: { cardId: number; payload: any }) => {
             if (!board_id) throw new Error("Board ID is required");
-            await editCard(board_id, cardId, payload);
+            await editCard(Number(board_id), cardId, payload);
         },
         onSuccess: () => {
             toast.success("Card updated successfully");
@@ -66,21 +65,15 @@ export function useCard(board_id: string | undefined, lists: IList[]) {
         }
     });
 
-    const handleEditCard = (listId: number, cardId: number) => {
+    const handleEditCard = (listId: number, cardId: number, newTitle: string, currentCard: any) => {
         if (!board_id) return;
-        const list = lists.find(l => l.id === listId);
-        const card = list?.cards.find(c => c.id === cardId);
-
-        if (!card) return;
-
-        const newTitle = window.prompt("New card title:", card.title);
-        if (!newTitle || newTitle.trim() === "" || newTitle === card.title) return;
+        if (!newTitle || newTitle.trim() === "") return;
 
         const payload = {
             title: newTitle,
             list_id: listId,
-            position: card.position,
-            description: card.description
+            position: currentCard.position,
+            description: currentCard.description
         };
 
         editCardMutation.mutate({ cardId, payload });

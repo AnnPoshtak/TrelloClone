@@ -1,41 +1,63 @@
-import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
-import { useRegister } from "../../hooks/UseRegister/UseRegister";
+import { Link } from "react-router-dom";
+import { useRegister } from "../../hooks/useRegister/useRegister";
+import { useForm, type SubmitHandler } from "react-hook-form";
+
+interface IRegisterInput {
+  email: string;
+  password: string;
+  repeatPassword: string;
+}
 
 function Register() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [repeatPassword, setRepeatPassword] = useState("");
+    const { 
+        register, 
+        handleSubmit, 
+        watch, 
+        formState: { errors } 
+    } = useForm<IRegisterInput>();
 
-    const { Register } = useRegister();
+    const { Register: registerUser } = useRegister();
+    const passwordValue = watch("password");
 
-    const handleRegister = (e: React.FormEvent) => {
-        e.preventDefault();
-        Register(email, password, repeatPassword);
+    const onSubmit: SubmitHandler<IRegisterInput> = (data) => {
+        registerUser(data.email, data.password, data.repeatPassword);
     };
 
     return (
         <div className="auth-container">
             <h1>Registration</h1>
-            <form onSubmit={handleRegister} className="auth-form">
+            <form onSubmit={handleSubmit(onSubmit)} className="auth-form">
                 <input
                     type="email"
                     placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                    {...register("email", { 
+                        required: "Email is required",
+                        pattern: {
+                            value: /\S+@\S+\.\S+/,
+                            message: "Invalid email format"
+                        }
+                    })}
                 />
+                {errors.email && <p className="error-msg">{errors.email.message}</p>}
+
                 <input
                     type="password"
                     placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                    {...register("password", { 
+                        required: "Password is required",
+                        minLength: { value: 6, message: "Min length is 6 characters" }
+                    })}
                 />
+                {errors.password && <p className="error-msg">{errors.password.message}</p>}
                 <input
                     type="password"
                     placeholder="Repeat Password"
-                    value={repeatPassword}
-                    onChange={(e) => setRepeatPassword(e.target.value)}
+                    {...register("repeatPassword", { 
+                        required: "Please repeat your password",
+                        validate: (value) => value === passwordValue || "Passwords do not match"
+                    })}
                 />
+                {errors.repeatPassword && <p className="error-msg">{errors.repeatPassword.message}</p>}
 
                 <button type="submit">Sign up</button>
             </form>
