@@ -17,12 +17,10 @@ function Home() {
                 const response = await api.get('/board');
                 setBoards(response.boards || response.data); 
             } catch (err: any) {
-                console.error(err);
                 if (err.response?.status === 401) {
-                    toast.error("Unauthorized. Please log in again");
                     navigate("/login");
                 } else {
-                    toast.error("Failed to load boards");
+                    toast.error("Error loading boards");
                 }
             }
         }
@@ -33,24 +31,20 @@ function Home() {
         try {
             const response = await api.post('/board', {
                 title: title,
-                custom: {
-                    background: color
-                }
+                custom: { background: color }
             });
 
             const newBoard: IBoard = {
-                id: response.data.id,
+                id: response.id,
                 title: title,
-                custom: [{ background: color }] as any 
+                custom: { background: color } as any 
             };
 
             setBoards([...boards, newBoard]);
             setModalStatus(false);
-            toast.success("Board created successfully");
-
+            toast.success("Created");
         } catch (err: any) {
-            console.error(err);
-            toast.error("Failed to create board");
+            toast.error("Error");
         }
     }
 
@@ -62,27 +56,38 @@ function Home() {
 
     return (
         <>
-            <h1 className="title">Your boards</h1>
-            <button className="button-logout" onClick={logOut}>Log out</button>
-            <div className="board-container">
-                {boards.map((board) => (
-                    <Link key={board.id} to={`/board/${board.id}`}>
-                        <BoardComponent
-                            title={board.title}
-                            custom={board.custom}
-                        />
-                    </Link>
-                ))}
+            <div className="title">
+                <h1>Boards</h1>
+                <button onClick={logOut}>Log out</button>
             </div>
-            <button className="add-board-btn" onClick={() => setModalStatus(true)}>+ add new board</button>
+            
+            <div className="board-container">
+                {boards.map((board) => {
+                    const boardColor = board.custom?.background 
+                        || (Array.isArray(board.custom) && board.custom[0]?.background) 
+                        || "#6366f1";
+
+                    return (
+                        <Link key={board.id} to={`/board/${board.id}`} style={{ textDecoration: 'none' }}>
+                            <div className="board-card" style={{ "--board-color": boardColor } as React.CSSProperties}>
+                                {board.title}
+                            </div>
+                        </Link>
+                    );
+                })}
+            </div>
+            
+            <div style={{ textAlign: 'center' }}>
+                <button className="add-board-btn" onClick={() => setModalStatus(true)}>+ New Board</button>
+            </div>
 
             <CreateModal
                 modalStatus={modalStatus}
                 onClose={() => setModalStatus(false)}
-                modalTitle="Create new board"
-                placeholder="Board Title"
+                modalTitle="New board"
+                placeholder="Title"
                 withColorPicker={true} 
-                onSubmit={({ text, color }) => createBoard(text, color || "blue")}
+                onSubmit={({ text, color }) => createBoard(text, color || "#6366f1")}
             />
         </>
     )

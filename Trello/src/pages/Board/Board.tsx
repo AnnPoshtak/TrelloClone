@@ -16,7 +16,6 @@ function Board() {
     
     const [isListCreateModalOpen, setIsListCreateModalOpen] = useState(false);
     const [isCardCreateModalOpen, setIsCardCreateModalOpen] = useState(false);
-
     const [editingList, setEditingList] = useState<IEditingList | null>(null);
     const [editingCard, setEditingCard] = useState<IEditingCard | null>(null);
     const [isBoardEditModalOpen, setIsBoardEditModalOpen] = useState(false);
@@ -26,15 +25,21 @@ function Board() {
     const { handleCreateCard, handleCardDelete, handleEditCard, handleCardMove } = useCard(board_id, lists);
 
     if (isLoading) return <div>Loading...</div>;
-    if (isError || !board) return <div>Error loading board data</div>; 
+    if (isError || !board) return <div>Error</div>; 
+
+    const boardColor = board.custom?.background 
+        || (Array.isArray(board.custom) && board.custom[0]?.background) 
+        || "#6366f1";
 
     return (
-        <div className="board">
+        <div className="board" style={{ "--board-color": boardColor } as React.CSSProperties}>
             <div className="title">
-                <h1>{`${board.title} (ID: ${board_id})`}</h1>
-                <div className="control-btn">
-                    <button onClick={handleBoardDelete} className="delete-btn">❌</button>
-                    <button className="edit-btn" onClick={() => setIsBoardEditModalOpen(true)}>✏️</button>
+                <h1>{board.title}</h1>
+                <div className="title-actions">
+                    <button onClick={handleBoardDelete} className="delete-btn">Delete</button>
+                    <button onClick={() => setIsBoardEditModalOpen(true)} className="edit-btn">Edit</button>
+                    <button className="add-list-btn" onClick={() => setIsListCreateModalOpen(true)}>+ List</button>
+                    <button className="add-card-btn" onClick={() => setIsCardCreateModalOpen(true)}>+ Card</button>
                 </div>
             </div>
 
@@ -63,24 +68,23 @@ function Board() {
                         onCardMove={handleCardMove}
                     />
                 ))}
-
-                <button className="add-list-btn" onClick={() => setIsListCreateModalOpen(true)}>+ add new list</button>
-                <button className="add-card-btn" onClick={() => setIsCardCreateModalOpen(true)}>+ add new card</button>
             </div>
+            <Link to={"/"} className="home-btn">← Home</Link>
+            
 
             <CreateModal
                 modalStatus={isListCreateModalOpen}
                 onClose={() => setIsListCreateModalOpen(false)}
-                modalTitle="Create new list"
-                placeholder="List Title"
+                modalTitle="New list"
+                placeholder="Title"
                 onSubmit={({ text }) => handleCreateList(text, () => setIsListCreateModalOpen(false))}
             />
 
             <CreateModal
                 modalStatus={isCardCreateModalOpen}
                 onClose={() => setIsCardCreateModalOpen(false)}
-                modalTitle="Create new card"
-                placeholder="Card Text"
+                modalTitle="New card"
+                placeholder="Text"
                 lists={lists}
                 onSubmit={({ text, listId }) => handleCreateCard(text, listId!, () => setIsCardCreateModalOpen(false))}
             />
@@ -89,7 +93,7 @@ function Board() {
                 modalStatus={!!editingList}
                 onClose={() => setEditingList(null)}
                 modalTitle="Edit List"
-                placeholder="List Title"
+                placeholder="Title"
                 initialText={editingList?.title || ""}
                 onSubmit={({ text }) => {
                     if (editingList) {
@@ -103,7 +107,7 @@ function Board() {
                 modalStatus={!!editingCard}
                 onClose={() => setEditingCard(null)}
                 modalTitle="Edit Card"
-                placeholder="Card Text"
+                placeholder="Text"
                 initialText={editingCard?.title || ""}
                 onSubmit={({ text }) => {
                     if (editingCard) {
@@ -117,7 +121,7 @@ function Board() {
                 modalStatus={isBoardEditModalOpen}
                 onClose={() => setIsBoardEditModalOpen(false)}
                 modalTitle="Edit Board"
-                placeholder="Board Title"
+                placeholder="Title"
                 initialText={board.title}
                 onSubmit={({ text }) => {
                     handleEditBoard(text);
@@ -125,7 +129,7 @@ function Board() {
                 }}
             />
 
-            <Link to={"/"} className={"home-btn"}>Home</Link>
+            
         </div>
     );
 }
