@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import List from "./components/List/List.tsx";
-import { useBoard } from "../../hooks/UseBoard/UseBoard.tsx";
-import { useList } from "../../hooks/UseList/UseList.tsx";
-import { useCard } from "../../hooks/UseCard/UseCard.tsx";
+import { useBoard } from "../../hooks/useBoard/useBoard.tsx";
+import { useList } from "../../hooks/useList/useList.tsx";
+import { useCard } from "../../hooks/useCard/useCard.tsx";
 import CreateModal from "../../components/CreateModal/CreateModal.tsx";
 import EditModal from "../../components/EditModal/EditModal.tsx";
 import type { IList } from "../../common/interfaces/IList.ts";

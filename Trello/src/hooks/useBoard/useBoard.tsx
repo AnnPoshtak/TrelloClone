@@ -14,7 +14,7 @@ export function useBoard(board_id: string | undefined) {
         queryFn: async () => {
             try {
                 const response = await api.get(`/board/${board_id}`);
-                return response.data; 
+                return response; 
             } catch (err: any) {
                 console.error(err);
                 toast.error("Failed to load board data");

@@ -8,5 +8,5 @@ export interface IBoard{
     id: number;
     title: string;
     custom: Custom[];
-    lists: IList
+    lists: IList[];
 }

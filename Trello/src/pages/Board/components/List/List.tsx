@@ -15,15 +15,15 @@ interface ListProps {
 }
 
 function List({title, cards, id, onCardDelete, onListDelete, onListEdit, onCardEdit, onCardMove}: ListProps) {
-    function DragStart(e: React.DragEvent, cardId: number) {
+    function dragStart(e: React.DragEvent, cardId: number) {
         e.dataTransfer.setData("cardId", cardId.toString());
         e.dataTransfer.setData("currentListId", id.toString());
     }
-    function DragOver (e: React.DragEvent) {
+    function dragOver (e: React.DragEvent) {
         e.preventDefault();
     }
 
-    function DragDrop(e: React.DragEvent){
+    function dragDrop(e: React.DragEvent){
         e.preventDefault();
         let cardId = Number(e.dataTransfer.getData("cardId"));
         let currentListId = Number(e.dataTransfer.getData("currentListId"));
@@ -31,7 +31,7 @@ function List({title, cards, id, onCardDelete, onListDelete, onListEdit, onCardE
     }
 
     return (
-        <div className="list_class" onDragOver={DragOver} onDrop={DragDrop}>
+        <div className="list_class" onDragOver={dragOver} onDrop={dragDrop}>
             <div className="list-header">
                 <div className="list__title">
                     <span>{title}</span>
@@ -44,7 +44,7 @@ function List({title, cards, id, onCardDelete, onListDelete, onListEdit, onCardE
 
             <div className="list__cards">
                 {cards.map(card => (
-                    <div key={card.id} draggable={true} onDragStart={(e) => DragStart(e, card.id)}>
+                    <div key={card.id} draggable={true} onDragStart={(e) => dragStart(e, card.id)}>
                         <CardComponent
                             key={card.id}
                             cardId={card.id}

@@ -15,7 +15,7 @@ function Home() {
         async function fetchBoards() {
             try {
                 const response = await api.get('/board');
-                setBoards(response.data.boards || response.data); 
+                setBoards(response.boards || response.data); 
             } catch (err: any) {
                 console.error(err);
                 if (err.response?.status === 401) {

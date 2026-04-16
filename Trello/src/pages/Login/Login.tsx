@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { useLogin } from "../../hooks/UseLogin/UseLogin.tsx";
+import { useLogin } from "../../hooks/useLogin/useLogin.tsx";
 
 function Login() {
     const [email, setEmail] = useState("");
