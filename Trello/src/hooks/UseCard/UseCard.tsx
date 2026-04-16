@@ -65,21 +65,15 @@ export function useCard(board_id: string | undefined, lists: IList[]) {
         }
     });
 
-    const handleEditCard = (listId: number, cardId: number) => {
+    const handleEditCard = (listId: number, cardId: number, newTitle: string, currentCard: any) => {
         if (!board_id) return;
-        const list = lists.find(l => l.id === listId);
-        const card = list?.cards.find(c => c.id === cardId);
-
-        if (!card) return;
-
-        const newTitle = window.prompt("New card title:", card.title);
-        if (!newTitle || newTitle.trim() === "" || newTitle === card.title) return;
+        if (!newTitle || newTitle.trim() === "") return;
 
         const payload = {
             title: newTitle,
             list_id: listId,
-            position: card.position,
-            description: card.description
+            position: currentCard.position,
+            description: currentCard.description
         };
 
         editCardMutation.mutate({ cardId, payload });

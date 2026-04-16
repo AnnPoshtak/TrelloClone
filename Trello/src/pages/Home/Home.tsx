@@ -3,9 +3,9 @@ import {useNavigate} from "react-router-dom";
 import { Link } from "react-router-dom";
 import type { IBoard } from "../../common/interfaces/IBoard.ts";
 import BoardComponent from "./components/BoardComponent/BoardComponent.tsx";
-import Modal from "./components/modal/Modal.tsx";
 import api from "../../api/request.ts";
 import toast from "react-hot-toast";
+import CreateModal from "../../components/CreateModal/CreateModal.tsx";
 
 function Home () {
     const navigate = useNavigate();
@@ -47,7 +47,6 @@ function Home () {
                     background: color
                 }
             });
-            console.log("Сервер відповів:", response.data);
             const newBoard: IBoard = {
                 id: response.id,
                 title: title,
@@ -101,7 +100,14 @@ function Home () {
             </div>
             <button className="add-board-btn" onClick={() => setModalStatus(true)}>+ add new board</button>
 
-            <Modal modalStatus={modalStatus} onClose={() => setModalStatus(false)} onSubmit={createBoard}/>
+            <CreateModal
+                modalStatus={modalStatus}
+                onClose={() => setModalStatus(false)}
+                modalTitle="Create new board"
+                placeholder="Board Title"
+                withColorPicker={true} 
+                onSubmit={({ text, color }) => createBoard(text, color)}
+            />
         </>
     )
 }

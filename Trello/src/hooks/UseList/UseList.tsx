@@ -64,15 +64,9 @@ export function useList(board_id: string | undefined, lists: IList[]) {
         }
     });
 
-    const handleEditList = (listId: number) => {
+    const handleEditList = (listId: number, newTitle: string) => {
         if (!board_id) return;
-        
-        const listToEdit = lists.find((list) => list.id === listId);
-        if (!listToEdit) return;
-
-        const newTitle = window.prompt("Enter new list title:", listToEdit.title);
-        if (!newTitle || newTitle.trim() === "" || newTitle === listToEdit.title) return;
-
+        if (!newTitle || newTitle.trim() === "") return;
         editListMutation.mutate({ listId, title: newTitle });
     };
 

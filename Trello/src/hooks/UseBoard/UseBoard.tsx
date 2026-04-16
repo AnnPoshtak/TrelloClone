@@ -56,11 +56,9 @@ export function useBoard(board_id: string | undefined) {
         }
     });
 
-    const handleEditBoard = async () => {
+    const handleEditBoard = async (newTitle: string) => {
         if (!board_id || !board) return;
-        const newTitle = window.prompt("Enter new board title:", board.title);
         if (!newTitle || newTitle.trim() === "" || newTitle === board.title) return;
-
         editMutation.mutate({ boardId: board_id, newTitle });
     };
 
