@@ -12,8 +12,8 @@ export function useLogin() {
             return response;
         },
         onSuccess: (data) => {
-            const token = data.token;
-            const refreshToken = data.refreshToken
+            const token = data.data.token;
+            const refreshToken = data.data.refreshToken;
 
             if (token) {
                 localStorage.setItem('token', token);

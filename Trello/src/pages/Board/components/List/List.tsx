@@ -4,7 +4,7 @@ import React from "react"
 
 interface ListProps {
     id: number;
-    boardId: number;
+    boardId: string;
     title: string;
     cards: ICard[];
     onListDelete: (listId: number) => void;
@@ -14,7 +14,7 @@ interface ListProps {
     onCardMove: (cardId: number, currentListId: number, newListId: number) => void;
 }
 
-function List({title, cards, boardId, id, onCardDelete, onListDelete, onListEdit, onCardEdit, onCardMove}: ListProps) {
+function List({title, cards, id, onCardDelete, onListDelete, onListEdit, onCardEdit, onCardMove}: ListProps) {
     function DragStart(e: React.DragEvent, cardId: number) {
         e.dataTransfer.setData("cardId", cardId.toString());
         e.dataTransfer.setData("currentListId", id.toString());

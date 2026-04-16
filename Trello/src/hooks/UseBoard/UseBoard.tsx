@@ -13,7 +13,8 @@ export function useBoard(board_id: string | undefined) {
         queryKey: ["board", board_id],
         queryFn: async () => {
             try {
-                return await api.get(`/board/${board_id}`);
+                const response = await api.get(`/board/${board_id}`);
+                return response.data; 
             } catch (err: any) {
                 console.error(err);
                 toast.error("Failed to load board data");
@@ -27,7 +28,7 @@ export function useBoard(board_id: string | undefined) {
 
     const deleteMutation = useMutation({
         mutationFn: async (boardId: string) => {
-            await deleteBoard(boardId);
+            await deleteBoard(Number(boardId)); 
         },
         onSuccess: () => {
             toast.success("Board deleted");
@@ -45,7 +46,7 @@ export function useBoard(board_id: string | undefined) {
 
     const editMutation = useMutation({
         mutationFn: async ({ boardId, newTitle }: { boardId: string, newTitle: string }) => {
-            await editBoard(boardId, newTitle);
+            await editBoard(Number(boardId), newTitle);
         },
         onSuccess: () => {
             toast.success("Board updated");

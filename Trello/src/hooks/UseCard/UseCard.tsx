@@ -36,7 +36,7 @@ export function useCard(board_id: string | undefined, lists: IList[]) {
     const deleteCardMutation = useMutation({
         mutationFn: async (cardId: number) => {
             if (!board_id) throw new Error("Board ID is required");
-            await deleteCard(board_id, cardId);
+            await deleteCard(Number(board_id), cardId);
         },
         onSuccess: () => {
             toast.success("Card deleted successfully");
@@ -54,7 +54,7 @@ export function useCard(board_id: string | undefined, lists: IList[]) {
     const editCardMutation = useMutation({
         mutationFn: async ({ cardId, payload }: { cardId: number; payload: any }) => {
             if (!board_id) throw new Error("Board ID is required");
-            await editCard(board_id, cardId, payload);
+            await editCard(Number(board_id), cardId, payload);
         },
         onSuccess: () => {
             toast.success("Card updated successfully");

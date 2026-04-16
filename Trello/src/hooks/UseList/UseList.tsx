@@ -34,7 +34,7 @@ export function useList(board_id: string | undefined, lists: IList[]) {
     const deleteListMutation = useMutation({
         mutationFn: async (listId: number) => {
             if (!board_id) throw new Error("Board ID is required");
-            await deleteList(board_id, listId);
+            await deleteList(Number(board_id), listId);
         },
         onSuccess: () => {
             toast.success("List deleted successfully");
@@ -53,7 +53,7 @@ export function useList(board_id: string | undefined, lists: IList[]) {
     const editListMutation = useMutation({
         mutationFn: async ({ listId, title }: { listId: number; title: string }) => {
             if (!board_id) throw new Error("Board ID is required");
-            await editList(board_id, listId, title);
+            await editList(Number(board_id), listId, title);
         },
         onSuccess: () => {
             toast.success("List updated successfully");

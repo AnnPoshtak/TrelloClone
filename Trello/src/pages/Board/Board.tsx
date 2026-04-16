@@ -6,6 +6,7 @@ import { useList } from "../../hooks/UseList/UseList.tsx";
 import { useCard } from "../../hooks/UseCard/UseCard.tsx";
 import CreateModal from "../../components/CreateModal/CreateModal.tsx";
 import EditModal from "../../components/EditModal/EditModal.tsx";
+import type { IList } from "../../common/interfaces/IList.ts";
 
 interface IEditingList { id: number; title: string; }
 interface IEditingCard { listId: number; id: number; title: string; cardData: any; }
@@ -38,7 +39,7 @@ function Board() {
             </div>
 
             <div className="lists-container">
-                {lists.map((list) => (
+                {lists.map((list: IList) => (
                     <List
                         key={list.id}
                         id={list.id}
