@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import type { IBoard } from "../../../../common/interfaces/IBoard.ts";
+
 interface BoardComponentProps {
     title: string;
     custom: IBoard['custom'];
@@ -7,10 +8,10 @@ interface BoardComponentProps {
 }
 
 function BoardComponent({ board }: BoardComponentProps) {
-    const boardColor = board.custom?.background 
+    const boardColor = board.custom?.background || '#6366f1'; 
     return (
-        <Link key={board.id} to={`/board/${board.id}`} style={{ textDecoration: 'none' }}>
-            <div className="board-card" style={{ "--board-color": boardColor } as React.CSSProperties}>
+        <Link key={board.id} to={`/board/${board.id}`} className="no-underline block">
+            <div className="w-[200px] h-[100px] rounded-lg text-white flex items-center justify-center font-bold transition-all duration-200 hover:opacity-90 hover:-translate-y-0.5"style={{ backgroundColor: boardColor }}>
                 {board.title}
             </div>
         </Link>

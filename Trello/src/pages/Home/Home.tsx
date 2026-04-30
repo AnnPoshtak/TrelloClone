@@ -61,7 +61,7 @@ function Home() {
                 <button onClick={logOut}>Log out</button>
             </div>
             
-            <div className="board-container">
+            <div className="flex flex-wrap gap-20 p-20 justify-center">
                 {boards.map(board => (
                     <BoardComponent
                         key={board.id}
@@ -72,8 +72,8 @@ function Home() {
                 ))}
             </div>
 
-            <div style={{ textAlign: 'center' }}>
-                <button className="add-board-btn" onClick={() => setModalStatus(true)}>+ New Board</button>
+            <div className="text-center">
+                <button onClick={() => setModalStatus(true)}>+ New Board</button>
             </div>
 
             <CreateModal
