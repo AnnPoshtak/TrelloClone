@@ -11,6 +11,8 @@ function Home() {
     const [boards, setBoards] = useState<IBoard[]>([]);
     const [modalStatus, setModalStatus] = useState<boolean>(false);
 
+    const [activeTab, setActiveTab] = useState<"Дошки" | "Останні дії" | "Налаштування" | "По приколу">("Дошки");
+
     useEffect(() => {
         async function fetchBoards() {
             try {
@@ -56,9 +58,18 @@ function Home() {
 
     return (
         <>
-            <div className="title">
-                <h1>Boards</h1>
-                <button onClick={logOut}>Log out</button>
+        <nav className="absolute left-0 top-0 h-full w-25">
+           <div>Дошки</div>
+           <div>Останні дії</div>
+           <div>Налаштування</div> 
+           <div>По приколу</div>
+        </nav>
+            <div className="flex flex-col items-center py-10 px-5">
+                <h1 className="text-[3rem] font-bold mb-[15px]">Boards</h1>
+                <div className="flex gap-4">
+                    <button onClick={logOut}>Log out</button>
+                    <button onClick={() => setModalStatus(true)}>+ New Board</button>
+                </div>
             </div>
             
             <div className="flex flex-wrap gap-20 p-20 justify-center">
@@ -70,10 +81,6 @@ function Home() {
                         board={board}
                     />
                 ))}
-            </div>
-
-            <div className="text-center">
-                <button onClick={() => setModalStatus(true)}>+ New Board</button>
             </div>
 
             <CreateModal
