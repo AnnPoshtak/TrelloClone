@@ -1,5 +1,6 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import {themeSettings} from "../../ThemeSettings.ts"
 
 interface IEditModalProps {
     modalStatus: boolean;
@@ -39,6 +40,10 @@ function EditModal({
             color: initialColor
         }
     });
+    
+    const [themeStatus] = useState(() => {
+                return localStorage.getItem("trello_theme") || "Світло-Синя";
+            });
 
     useEffect(() => {
         if (modalStatus) {
@@ -48,6 +53,8 @@ function EditModal({
             });
         }
     }, [modalStatus, initialText, initialColor, reset]);
+
+    const currentTheme = themeSettings[themeStatus] || themeSettings["Світло-Синя"];
 
     if (!modalStatus) return null;
 
@@ -88,7 +95,7 @@ function EditModal({
                         <button type="button" onClick={onClose} className="px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium">
                             Cancel
                         </button>
-                        <button type="submit" className="px-5 py-2 bg-[#0052cc] text-white rounded-lg hover:bg-[#0043a6] shadow-md active:scale-95 transition-all font-semibold">
+                        <button type="submit" className={`px-5 py-2  text-white rounded-lg ${currentTheme.btn} shadow-md active:scale-95 transition-all font-semibold`}>
                             Save
                         </button>
                     </div>

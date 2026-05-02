@@ -1,6 +1,7 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import type { IList } from "../../common/interfaces/IList.ts";
+import {themeSettings} from "../../ThemeSettings.ts"
 
 interface IModalProps {
     modalStatus: boolean;
@@ -40,6 +41,9 @@ function CreateModal({
             color: "#737373"
         }
     });
+    const [themeStatus] = useState(() => {
+            return localStorage.getItem("trello_theme") || "Світло-Синя";
+        });
 
     useEffect(() => {
         if (lists && lists.length > 0) {
@@ -58,6 +62,10 @@ function CreateModal({
     }, [modalStatus, lists, reset]);
 
     if (!modalStatus) return null;
+
+    
+
+    const currentTheme = themeSettings[themeStatus] || themeSettings["Світло-Синя"];
 
     const onSubmitForm: SubmitHandler<FormValues> = (data) => {
         onSubmit({ 
@@ -127,7 +135,7 @@ function CreateModal({
                         </button>
                         <button 
                             type="submit"
-                            className="px-5 py-2 bg-[#0052cc] text-white rounded-lg hover:bg-[#0043a6] shadow-md active:scale-95 transition-all font-semibold"
+                            className={`px-5 py-2  text-white rounded-lg ${currentTheme.btn} shadow-md active:scale-95 transition-all font-semibold`}
                         >
                             Create
                         </button>
