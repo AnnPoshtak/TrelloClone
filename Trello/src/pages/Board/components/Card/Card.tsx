@@ -24,6 +24,7 @@ function Card({ title, cardId, onDelete, onEdit }: CardProps) {
                     }}
                     className="p-1.5 hover:bg-blue-50/80 text-gray-400 hover:text-blue-500 rounded-lg transition-all"
                     title="Edit"
+                    aria-label="Edit card"
                 >
                     <Pencil strokeWidth={2} size={16} />
                 </button>
@@ -34,6 +35,7 @@ function Card({ title, cardId, onDelete, onEdit }: CardProps) {
                     }}
                     className="p-1.5 hover:bg-red-50/80 text-gray-400 hover:text-red-500 rounded-lg transition-all"
                     title="Delete"
+                    aria-label="Delete card"
                 >
                     <Trash2 strokeWidth={2} size={16} />
                 </button>

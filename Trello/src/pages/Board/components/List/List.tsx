@@ -45,6 +45,7 @@ function List({title, cards, id, onCardDelete, onListDelete, onListEdit, onCardE
                         className="p-1.5 text-gray-400 hover:bg-white/60 hover:text-blue-600 rounded-lg transition-all" 
                         onClick={() => onListEdit(id)}
                         title="Edit list"
+                        aria-label="Edit list"
                     >
                         <Pencil strokeWidth={2} size={16} />
                     </button>
@@ -52,6 +53,7 @@ function List({title, cards, id, onCardDelete, onListDelete, onListEdit, onCardE
                         className="p-1.5 text-gray-400 hover:bg-white/60 hover:text-red-500 rounded-lg transition-all" 
                         onClick={() => onListDelete(id)}
                         title="Delete list"
+                        aria-label="Delete list"
                     >
                         <Trash2 strokeWidth={2} size={16} />
                     </button>
