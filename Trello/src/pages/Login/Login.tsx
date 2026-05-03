@@ -45,7 +45,7 @@ function Login() {
                         playsInline 
                         className="w-full h-auto object-contain hover:scale-105 transition-transform duration-500 pointer-events-none"
                     >
-                        <source src="src/data/sticker.webm" type="video/webm" />
+                        <source src="src/assets/sticker.webm" type="video/webm" />
                     </video>
                 </div>
 
