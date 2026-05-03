@@ -17,7 +17,7 @@ function Home() {
 
     const [themeStatus, setThemeStatus] = useLocalStorage("trello_theme", "Небесна");
     const [personalNote, setPersonalNote] = useLocalStorage("trello_note", "");
-    const currentTheme = themeSettings[themeStatus] || themeSettings["Небесна"];
+    const currentTheme = themeSettings[themeStatus as keyof typeof themeSettings] || themeSettings["Небесна"];
 
     const { boards, createBoard } = useBoards();
 

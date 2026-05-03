@@ -29,7 +29,7 @@ function Register() {
         return localStorage.getItem("trello_theme") || "Небесна";
     });
     
-    const currentTheme = themeSettings[themeStatus] || themeSettings["Небесна"];
+    const currentTheme = themeSettings[themeStatus as keyof typeof themeSettings] || themeSettings["Небесна"];
     
     return (
         <div className={`min-h-screen flex items-center justify-center bg-gradient-to-br ${currentTheme.bg} p-4 relative overflow-hidden font-sans`}>
@@ -79,7 +79,6 @@ function Register() {
                             )}
                         </div>
 
-                        {/* PASSWORD */}
                         <div className="flex flex-col gap-1 w-full">
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">
@@ -107,7 +106,6 @@ function Register() {
                             )}
                         </div>
 
-                        {/* REPEAT PASSWORD */}
                         <div className="flex flex-col gap-1 w-full">
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">

@@ -26,12 +26,11 @@ function Login() {
         return localStorage.getItem("trello_theme") || "Небесна";
     });
 
-    const currentTheme = themeSettings[themeStatus] || themeSettings["Небесна"];
+    const currentTheme = themeSettings[themeStatus as keyof typeof themeSettings] || themeSettings["Небесна"];
 
     return (
         <div className={`min-h-screen flex items-center justify-center bg-gradient-to-br ${currentTheme.bg} p-4 relative overflow-hidden font-sans`}>
             
-            {/* фон (менш прив’язаний до синього) */}
             <div className="absolute top-10 left-10 w-64 h-64 bg-white/30 rounded-full blur-3xl"></div>
             <div className="absolute bottom-10 right-10 w-80 h-80 bg-white/20 rounded-full blur-3xl"></div>
 

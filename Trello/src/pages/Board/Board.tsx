@@ -7,6 +7,7 @@ import { useCard } from "../../hooks/useCard/useCard.tsx";
 import CreateModal from "../../components/CreateModal/CreateModal.tsx";
 import EditModal from "../../components/EditModal/EditModal.tsx";
 import type { IList } from "../../common/interfaces/IList.ts";
+import type { IBoard } from "../../common/interfaces/IBoard.ts";
 import { themeSettings } from "../../ThemeSettings.ts";
 
 function Board() {
@@ -22,35 +23,39 @@ function Board() {
         return localStorage.getItem("trello_theme") || "Небесна";
     });
 
-    const currentTheme = themeSettings[themeStatus] || themeSettings["Небесна"];
+    const currentTheme = themeSettings[themeStatus as keyof typeof themeSettings] || themeSettings["Небесна"];
 
     const { board, lists, isLoading, isError, handleBoardDelete, handleEditBoard } = useBoard(board_id);
     const { handleCreateList, handleListDelete, handleEditList } = useList(board_id, lists);
     const { handleCreateCard, handleCardDelete, handleEditCard, handleCardMove } = useCard(board_id, lists);
 
-    if (isLoading) return <div className="flex justify-center items-center h-screen font-medium text-gray-600">Loading...</div>;
+    if (isLoading) {
+        return (
+            <div className="flex justify-center items-center h-screen w-full">
+                <div className={`${currentTheme.text} text-[10px] w-[1em] h-[1em] rounded-full relative indent-[-9999em] [transform:translateZ(0)] custom-loader-anim`}>
+                    Loading...
+                </div>
+            </div>
+        );
+    }
     if (isError || !board) return <div className="text-red-500 text-center mt-10 font-medium">Error loading board</div>; 
 
-    const boardColor = board.custom?.background 
-        || (Array.isArray(board.custom) && board.custom[0]?.background) 
-        || "#6366f1";
+    const currentBoard = board as unknown as IBoard;
 
     return (
         <div 
-            className={`min-h-screen flex flex-col bg-gradient-to-br ${currentTheme.bg} transition-colors duration-700 font-sans relative overflow-hidden`}
-            style={{ "--board-color": boardColor } as React.CSSProperties}
-        >
+            className={`min-h-screen flex flex-col bg-linear-to-br ${currentTheme.bg} transition-colors duration-700 font-sans relative overflow-hidden`}>
 
             <header className="flex justify-between items-center w-full p-8 relative z-10 shrink-0">
                 <Link 
                     to="/" 
-                    className="bg-white/80 backdrop-blur-md text-gray-800 px-6 py-2.5 rounded-[12px] font-medium hover:bg-white transition-all shadow-sm border border-white/50 flex items-center gap-2"
+                    className="bg-white/80 backdrop-blur-md text-gray-800 px-6 py-2.5 rounded-xl font-medium hover:bg-white transition-all shadow-sm border border-white/50 flex items-center gap-2"
                 >
                     ← Дошки
                 </Link>
 
                 <div className="bg-white/70 backdrop-blur-xl px-8 py-3 rounded-2xl shadow-sm border border-white/60 flex flex-wrap justify-center items-center gap-6">
-                    <h1 className="text-2xl font-bold text-gray-800">{board.title}</h1>
+                    <h1 className="text-2xl font-bold text-gray-800">{currentBoard.title}</h1>
                     
                     <div className="flex gap-3 border-l border-gray-300/50 pl-6">
                         <button 
@@ -80,7 +85,7 @@ function Board() {
                     </div>
                 </div>
 
-                <div className="w-[120px] hidden md:block"></div>
+                <div className="w-30 hidden md:block"></div>
             </header>
 
             <main className="flex-1 overflow-x-auto overflow-y-hidden px-8 pb-8 flex items-start gap-6">
@@ -114,7 +119,7 @@ function Board() {
             <CreateModal modalStatus={isCardCreateModalOpen} onClose={() => setIsCardCreateModalOpen(false)} modalTitle="New card" placeholder="Text" lists={lists} onSubmit={({ text, listId }) => handleCreateCard(text, listId!, () => setIsCardCreateModalOpen(false))} />
             <EditModal modalStatus={!!editingList} onClose={() => setEditingList(null)} modalTitle="Edit List" placeholder="Title" initialText={editingList?.title || ""} onSubmit={({ text }) => { if (editingList) { handleEditList(editingList.id, text); setEditingList(null); } }} />
             <EditModal modalStatus={!!editingCard} onClose={() => setEditingCard(null)} modalTitle="Edit Card" placeholder="Text" initialText={editingCard?.title || ""} onSubmit={({ text }) => { if (editingCard) { handleEditCard(editingCard.listId, editingCard.id, text, editingCard.cardData); setEditingCard(null); } }} />
-            <EditModal modalStatus={isBoardEditModalOpen} onClose={() => setIsBoardEditModalOpen(false)} modalTitle="Edit Board" placeholder="Title" initialText={board.title} onSubmit={({ text }) => { handleEditBoard(text); setIsBoardEditModalOpen(false); }} />
+            <EditModal modalStatus={isBoardEditModalOpen} onClose={() => setIsBoardEditModalOpen(false)} modalTitle="Edit Board" placeholder="Title" initialText={currentBoard.title} onSubmit={({ text }) => { handleEditBoard(text); setIsBoardEditModalOpen(false); }} />
         </div>
     );
 }

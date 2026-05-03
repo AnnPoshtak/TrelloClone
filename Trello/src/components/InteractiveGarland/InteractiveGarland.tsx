@@ -1,6 +1,5 @@
 import { useState, useEffect, useMemo } from "react";
 
-
 type ThemeType = {
   star: string;
   starGlow: string;
