@@ -115,11 +115,11 @@ function Board() {
                 ))}
             </main>
 
-            <CreateModal modalStatus={isListCreateModalOpen} onClose={() => setIsListCreateModalOpen(false)} modalTitle="New list" placeholder="Title" onSubmit={({ text }) => handleCreateList(text, () => setIsListCreateModalOpen(false))} />
-            <CreateModal modalStatus={isCardCreateModalOpen} onClose={() => setIsCardCreateModalOpen(false)} modalTitle="New card" placeholder="Text" lists={lists} onSubmit={({ text, listId }) => handleCreateCard(text, listId!, () => setIsCardCreateModalOpen(false))} />
-            <EditModal modalStatus={!!editingList} onClose={() => setEditingList(null)} modalTitle="Edit List" placeholder="Title" initialText={editingList?.title || ""} onSubmit={({ text }) => { if (editingList) { handleEditList(editingList.id, text); setEditingList(null); } }} />
-            <EditModal modalStatus={!!editingCard} onClose={() => setEditingCard(null)} modalTitle="Edit Card" placeholder="Text" initialText={editingCard?.title || ""} onSubmit={({ text }) => { if (editingCard) { handleEditCard(editingCard.listId, editingCard.id, text, editingCard.cardData); setEditingCard(null); } }} />
-            <EditModal modalStatus={isBoardEditModalOpen} onClose={() => setIsBoardEditModalOpen(false)} modalTitle="Edit Board" placeholder="Title" initialText={currentBoard.title} onSubmit={({ text }) => { handleEditBoard(text); setIsBoardEditModalOpen(false); }} />
+            <CreateModal modalStatus={isListCreateModalOpen} onClose={() => setIsListCreateModalOpen(false)} modalTitle="Новий список" placeholder="Title" onSubmit={({ text }) => handleCreateList(text, () => setIsListCreateModalOpen(false))} />
+            <CreateModal modalStatus={isCardCreateModalOpen} onClose={() => setIsCardCreateModalOpen(false)} modalTitle="Нова картка" placeholder="Text" lists={lists} onSubmit={({ text, listId }) => handleCreateCard(text, listId!, () => setIsCardCreateModalOpen(false))} />
+            <EditModal modalStatus={!!editingList} onClose={() => setEditingList(null)} modalTitle="Редагувати список" placeholder="Title" initialText={editingList?.title || ""} onSubmit={({ text }) => { if (editingList) { handleEditList(editingList.id, text); setEditingList(null); } }} />
+            <EditModal modalStatus={!!editingCard} onClose={() => setEditingCard(null)} modalTitle="Редагувати картку" placeholder="Text" initialText={editingCard?.title || ""} onSubmit={({ text }) => { if (editingCard) { handleEditCard(editingCard.listId, editingCard.id, text, editingCard.cardData); setEditingCard(null); } }} />
+            <EditModal modalStatus={isBoardEditModalOpen} onClose={() => setIsBoardEditModalOpen(false)} modalTitle="Редагувати дошку" placeholder="Title" initialText={currentBoard.title} onSubmit={({ text }) => { handleEditBoard(text); setIsBoardEditModalOpen(false); }} />
         </div>
     );
 }

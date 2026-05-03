@@ -3,9 +3,9 @@ import { useNavigate } from "react-router-dom";
 import BoardComponent from "./components/BoardComponent/BoardComponent.tsx";
 import CreateModal from "../../components/CreateModal/CreateModal.tsx";
 import { themeSettings } from "../../ThemeSettings.ts";
-import { SideBar } from "../../components/SideBar/SideBar.tsx";
-import { Header } from "../../components/Header/Header.tsx";
-import { Settings } from "../../components/Settings/Settings.tsx";
+import { SideBar } from "./components/SideBar/SideBar.tsx";
+import { Header } from "./components/Header/Header.tsx";
+import { Settings } from "./components/Settings/Settings.tsx";
 
 import { useLocalStorage } from "../../hooks/useLocalStorage/useLocalStorage.ts";
 import { useBoards } from "../../hooks/useBoards/useBoards.ts";
@@ -50,7 +50,7 @@ function Home() {
                                 ))}
                             </div>
 
-                            <CreateModal modalStatus={modalStatus} onClose={() => setModalStatus(false)} modalTitle="New board" placeholder="Title" withColorPicker={true} onSubmit={({ text, color }) => handleCreateBoard(text, color)} />
+                            <CreateModal modalStatus={modalStatus} onClose={() => setModalStatus(false)} modalTitle="Нова дошка" placeholder="Title" withColorPicker={true} onSubmit={({ text, color }) => handleCreateBoard(text, color)} />
                         </>
                     )}
 

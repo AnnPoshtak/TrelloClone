@@ -33,8 +33,6 @@ function Register() {
     
     return (
         <div className={`min-h-screen flex items-center justify-center bg-gradient-to-br ${currentTheme.bg} p-4 relative overflow-hidden font-sans`}>
-            
-            {/* універсальний фон */}
             <div className="absolute top-10 left-10 w-64 h-64 bg-white/30 rounded-full blur-3xl"></div>
             <div className="absolute bottom-10 right-10 w-80 h-80 bg-white/20 rounded-full blur-3xl"></div>
 
@@ -48,7 +46,6 @@ function Register() {
 
                     <form onSubmit={handleSubmit(onSubmit)} className="w-full flex flex-col gap-5">
 
-                        {/* EMAIL */}
                         <div className="flex flex-col gap-1 w-full">
                             <div className="relative">
                                 <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500">

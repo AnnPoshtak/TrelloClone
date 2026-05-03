@@ -65,7 +65,7 @@ function CreateModal({
 
     
 
-    const currentTheme = themeSettings[themeStatus] || themeSettings["Світло-Синя"];
+    const currentTheme = themeSettings[themeStatus as keyof typeof themeSettings] || themeSettings["Небесна"];
 
     const onSubmitForm: SubmitHandler<FormValues> = (data) => {
         onSubmit({ 
@@ -131,13 +131,13 @@ function CreateModal({
                             onClick={onClose}
                             className="px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium"
                         >
-                            Cancel
+                            Відміна
                         </button>
                         <button 
                             type="submit"
                             className={`px-5 py-2  text-white rounded-lg ${currentTheme.btn} shadow-md active:scale-95 transition-all font-semibold`}
                         >
-                            Create
+                            Підтвердити
                         </button>
                     </div>
                 </form>

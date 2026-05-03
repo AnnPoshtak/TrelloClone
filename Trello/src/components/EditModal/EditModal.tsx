@@ -54,7 +54,7 @@ function EditModal({
         }
     }, [modalStatus, initialText, initialColor, reset]);
 
-    const currentTheme = themeSettings[themeStatus] || themeSettings["Світло-Синя"];
+    const currentTheme = themeSettings[themeStatus as keyof typeof themeSettings] || themeSettings["Небесна"];
 
     if (!modalStatus) return null;
 
@@ -93,10 +93,10 @@ function EditModal({
 
                     <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px', marginTop: '10px' }}>
                         <button type="button" onClick={onClose} className="px-5 py-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors font-medium">
-                            Cancel
+                            Відмінити
                         </button>
                         <button type="submit" className={`px-5 py-2  text-white rounded-lg ${currentTheme.btn} shadow-md active:scale-95 transition-all font-semibold`}>
-                            Save
+                            Зберегти
                         </button>
                     </div>
                 </form>
