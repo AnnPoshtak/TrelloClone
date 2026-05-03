@@ -1,4 +1,4 @@
-import type { ICard } from "../../../../common/interfaces/ICard.ts";
+import type { ICard } from "@/common/interfaces/ICard.ts";
 import CardComponent from "../Card/Card.tsx";
 import React from "react"
 import { Pencil, Trash2 } from "lucide-react";

@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useRegister } from "../../hooks/useRegister/useRegister";
-import { themeSettings } from "../../ThemeSettings";
+import { useRegister } from "@/hooks/useRegister/useRegister";
+import { themeSettings } from "@/ThemeSettings";
 
 interface IRegisterInput {
   email: string;

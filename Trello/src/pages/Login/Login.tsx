@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import { useLogin } from "../../hooks/useLogin/useLogin.tsx";
-import { themeSettings } from "../../ThemeSettings.ts";
+import { useLogin } from "@/hooks/useLogin/useLogin.tsx";
+import { themeSettings } from "@/ThemeSettings.ts";
 
 interface IFormInput {
   email: string;   

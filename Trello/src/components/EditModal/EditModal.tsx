@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import {themeSettings} from "../../ThemeSettings.ts"
+import {themeSettings} from "@/ThemeSettings.ts"
 
 interface IEditModalProps {
     modalStatus: boolean;

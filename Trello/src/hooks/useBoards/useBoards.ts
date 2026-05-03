@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
-import api from "../../api/request.ts"; 
-import type { IBoard } from "../../common/interfaces/IBoard.ts";
+import api from "@/api/request.ts"; 
+import type { IBoard } from "@/common/interfaces/IBoard.ts";
 
 export function useBoards() {
     const navigate = useNavigate();

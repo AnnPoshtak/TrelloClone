@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import BoardComponent from "./components/BoardComponent/BoardComponent.tsx";
-import CreateModal from "../../components/CreateModal/CreateModal.tsx";
-import { themeSettings } from "../../ThemeSettings.ts";
+import CreateModal from "@/components/CreateModal/CreateModal.tsx";
+import { themeSettings } from "@/ThemeSettings.ts";
 import { SideBar } from "./components/SideBar/SideBar.tsx";
 import { Header } from "./components/Header/Header.tsx";
 import { Settings } from "./components/Settings/Settings.tsx";
 
-import { useLocalStorage } from "../../hooks/useLocalStorage/useLocalStorage.ts";
-import { useBoards } from "../../hooks/useBoards/useBoards.ts";
+import { useLocalStorage } from "@/hooks/useLocalStorage/useLocalStorage.ts";
+import { useBoards } from "@/hooks/useBoards/useBoards.ts";
 
 function Home() {
     const navigate = useNavigate();

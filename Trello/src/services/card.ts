@@ -1,4 +1,4 @@
-import api from "..//api/request.ts";
+import api from "@/api/request.ts";
 
 const deleteCard = async (boardId: number, cardId: number) => {
     const response = await api.delete(`/board/${boardId}/card/${cardId}`);

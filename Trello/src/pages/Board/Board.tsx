@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import List from "./components/List/List.tsx";
-import { useBoard } from "../../hooks/useBoard/useBoard.tsx";
-import { useList } from "../../hooks/useList/useList.tsx";
-import { useCard } from "../../hooks/useCard/useCard.tsx";
-import CreateModal from "../../components/CreateModal/CreateModal.tsx";
-import EditModal from "../../components/EditModal/EditModal.tsx";
-import type { IList } from "../../common/interfaces/IList.ts";
-import type { IBoard } from "../../common/interfaces/IBoard.ts";
-import { themeSettings } from "../../ThemeSettings.ts";
+import { useBoard } from "@/hooks/useBoard/useBoard.tsx";
+import { useList } from "@/hooks/useList/useList.tsx";
+import { useCard } from "@/hooks/useCard/useCard.tsx";
+import CreateModal from "@/components/CreateModal/CreateModal.tsx";
+import EditModal from "@/components/EditModal/EditModal.tsx";
+import type { IList } from "@/common/interfaces/IList.ts";
+import type { IBoard } from "@/common/interfaces/IBoard.ts";
+import { themeSettings } from "@/ThemeSettings.ts";
 
 function Board() {
     const { board_id } = useParams();

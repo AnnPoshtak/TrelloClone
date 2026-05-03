@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
-import type { IList } from "../../common/interfaces/IList.ts";
-import {themeSettings} from "../../ThemeSettings.ts"
+import type { IList } from "@/common/interfaces/IList.ts";
+import {themeSettings} from "@/ThemeSettings.ts"
 
 interface IModalProps {
     modalStatus: boolean;

@@ -1,8 +1,8 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Board from '../pages/Board/Board.tsx';
-import Home from '../pages/Home/Home.tsx';
-import Register from '../pages/Register/Register.tsx';
-import Login from '../pages/Login/Login.tsx';
+import Board from '@/pages/Board/Board.tsx';
+import Home from '@/pages/Home/Home.tsx';
+import Register from '@/pages/Register/Register.tsx';
+import Login from '@/pages/Login/Login.tsx';
 
 import ProtectedRoute from "./ProtectedRoute/ProtectedRoute.tsx";
 import PublicRoute from "./PublicRoute/PublicRoute.tsx";
