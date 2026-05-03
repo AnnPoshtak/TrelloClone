@@ -7,6 +7,7 @@ import { useCard } from "../../hooks/useCard/useCard.tsx";
 import CreateModal from "../../components/CreateModal/CreateModal.tsx";
 import EditModal from "../../components/EditModal/EditModal.tsx";
 import type { IList } from "../../common/interfaces/IList.ts";
+import { themeSettings } from "../../ThemeSettings.ts";
 
 function Board() {
     const { board_id } = useParams();
@@ -16,52 +17,73 @@ function Board() {
     const [editingList, setEditingList] = useState<{ id: number; title: string } | null>(null);
     const [editingCard, setEditingCard] = useState<any>(null);
     const [isBoardEditModalOpen, setIsBoardEditModalOpen] = useState(false);
+    
+    const [themeStatus] = useState(() => {
+        return localStorage.getItem("trello_theme") || "Небесна";
+    });
+
+    const currentTheme = themeSettings[themeStatus] || themeSettings["Небесна"];
 
     const { board, lists, isLoading, isError, handleBoardDelete, handleEditBoard } = useBoard(board_id);
     const { handleCreateList, handleListDelete, handleEditList } = useList(board_id, lists);
     const { handleCreateCard, handleCardDelete, handleEditCard, handleCardMove } = useCard(board_id, lists);
 
-    if (isLoading) return <div className="flex justify-center items-center h-screen">Loading...</div>;
-    if (isError || !board) return <div className="text-red-500 text-center mt-10">Error loading board</div>; 
+    if (isLoading) return <div className="flex justify-center items-center h-screen font-medium text-gray-600">Loading...</div>;
+    if (isError || !board) return <div className="text-red-500 text-center mt-10 font-medium">Error loading board</div>; 
 
     const boardColor = board.custom?.background 
         || (Array.isArray(board.custom) && board.custom[0]?.background) 
         || "#6366f1";
 
     return (
-        <div className="min-h-screen bg-[#f4f5f7] text-[#172b4d] relative"style={{ "--board-color": boardColor } as React.CSSProperties}>
-            <Link to="/" className="absolute top-10 left-5 text-[#0052cc] font-bold hover:underline">← Home</Link>
-            <div className="flex flex-col items-center py-10 px-5">
-                <h1 className="text-[3rem] font-bold mb-[15px]">{board.title}</h1>
-                <div className="flex gap-2.5">
-                    <button 
-                        onClick={handleBoardDelete} 
-                        className="px-4 py-2 bg-[#ffebee] text-[#c62828] border border-[#ef9a9a] rounded font-medium hover:bg-[#ffcdd2] transition-colors"
-                    >
-                        Delete
-                    </button>
-                    <button 
-                        onClick={() => setIsBoardEditModalOpen(true)} 
-                        className="px-4 py-2 bg-[#e3f2fd] text-[#1565c0] border border-[#90caf9] rounded font-medium hover:bg-[#bbdefb] transition-colors"
-                    >
-                        Edit
-                    </button>
-                    <button 
-                        onClick={() => setIsListCreateModalOpen(true)}
-                        className="px-4 py-2 bg-[#fdf7e3] text-[#c09015] border border-[#a7a700] rounded font-medium hover:bg-[#f9f0c8] transition-colors"
-                    >
-                        + List
-                    </button>
-                    <button 
-                        onClick={() => setIsCardCreateModalOpen(true)}
-                        className="px-4 py-2 bg-[#fdf7e3] text-[#c09015] border border-[#a7a700] rounded font-medium hover:bg-[#f9f0c8] transition-colors"
-                    >
-                        + Card
-                    </button>
-                </div>
-            </div>
+        <div 
+            className={`min-h-screen flex flex-col bg-gradient-to-br ${currentTheme.bg} transition-colors duration-700 font-sans relative overflow-hidden`}
+            style={{ "--board-color": boardColor } as React.CSSProperties}
+        >
 
-            <div className="flex items-start gap-4 p-5 overflow-x-auto h-[calc(100vh-200px)]">
+            <header className="flex justify-between items-center w-full p-8 relative z-10 shrink-0">
+                <Link 
+                    to="/" 
+                    className="bg-white/80 backdrop-blur-md text-gray-800 px-6 py-2.5 rounded-[12px] font-medium hover:bg-white transition-all shadow-sm border border-white/50 flex items-center gap-2"
+                >
+                    ← Дошки
+                </Link>
+
+                <div className="bg-white/70 backdrop-blur-xl px-8 py-3 rounded-2xl shadow-sm border border-white/60 flex flex-wrap justify-center items-center gap-6">
+                    <h1 className="text-2xl font-bold text-gray-800">{board.title}</h1>
+                    
+                    <div className="flex gap-3 border-l border-gray-300/50 pl-6">
+                        <button 
+                            onClick={handleBoardDelete} 
+                            className="px-4 py-2 bg-red-100/60 text-red-600 border border-red-200/50 rounded-xl font-medium hover:bg-red-100 transition-colors shadow-sm"
+                        >
+                            Видалити
+                        </button>
+                        <button 
+                            onClick={() => setIsBoardEditModalOpen(true)} 
+                            className="px-4 py-2 bg-orange-100/60 text-orange-700 border border-orange-200/50 rounded-xl font-medium hover:bg-orange-100 transition-colors shadow-sm"
+                        >
+                            Редагувати
+                        </button>
+                        <button 
+                            onClick={() => setIsListCreateModalOpen(true)}
+                            className={`${currentTheme.btn} text-white border border-white/20 px-4 py-2 rounded-xl font-medium hover:opacity-90 transition-all shadow-md`}
+                        >
+                            + Список
+                        </button>
+                        <button 
+                            onClick={() => setIsCardCreateModalOpen(true)}
+                            className={`${currentTheme.btn} text-white border border-white/20 px-4 py-2 rounded-xl font-medium hover:opacity-90 transition-all shadow-md`}
+                        >
+                            + Картка
+                        </button>
+                    </div>
+                </div>
+
+                <div className="w-[120px] hidden md:block"></div>
+            </header>
+
+            <main className="flex-1 overflow-x-auto overflow-y-hidden px-8 pb-8 flex items-start gap-6">
                 {lists.map((list: IList) => (
                     <List
                         key={list.id}
@@ -86,64 +108,13 @@ function Board() {
                         onCardMove={handleCardMove}
                     />
                 ))}
-            </div>
+            </main>
 
-            <CreateModal
-                modalStatus={isListCreateModalOpen}
-                onClose={() => setIsListCreateModalOpen(false)}
-                modalTitle="New list"
-                placeholder="Title"
-                onSubmit={({ text }) => handleCreateList(text, () => setIsListCreateModalOpen(false))}
-            />
-
-            <CreateModal
-                modalStatus={isCardCreateModalOpen}
-                onClose={() => setIsCardCreateModalOpen(false)}
-                modalTitle="New card"
-                placeholder="Text"
-                lists={lists}
-                onSubmit={({ text, listId }) => handleCreateCard(text, listId!, () => setIsCardCreateModalOpen(false))}
-            />
-
-            <EditModal
-                modalStatus={!!editingList}
-                onClose={() => setEditingList(null)}
-                modalTitle="Edit List"
-                placeholder="Title"
-                initialText={editingList?.title || ""}
-                onSubmit={({ text }) => {
-                    if (editingList) {
-                        handleEditList(editingList.id, text);
-                        setEditingList(null);
-                    }
-                }}
-            />
-
-            <EditModal
-                modalStatus={!!editingCard}
-                onClose={() => setEditingCard(null)}
-                modalTitle="Edit Card"
-                placeholder="Text"
-                initialText={editingCard?.title || ""}
-                onSubmit={({ text }) => {
-                    if (editingCard) {
-                        handleEditCard(editingCard.listId, editingCard.id, text, editingCard.cardData);
-                        setEditingCard(null);
-                    }
-                }}
-            />
-
-            <EditModal
-                modalStatus={isBoardEditModalOpen}
-                onClose={() => setIsBoardEditModalOpen(false)}
-                modalTitle="Edit Board"
-                placeholder="Title"
-                initialText={board.title}
-                onSubmit={({ text }) => {
-                    handleEditBoard(text);
-                    setIsBoardEditModalOpen(false);
-                }}
-            />
+            <CreateModal modalStatus={isListCreateModalOpen} onClose={() => setIsListCreateModalOpen(false)} modalTitle="New list" placeholder="Title" onSubmit={({ text }) => handleCreateList(text, () => setIsListCreateModalOpen(false))} />
+            <CreateModal modalStatus={isCardCreateModalOpen} onClose={() => setIsCardCreateModalOpen(false)} modalTitle="New card" placeholder="Text" lists={lists} onSubmit={({ text, listId }) => handleCreateCard(text, listId!, () => setIsCardCreateModalOpen(false))} />
+            <EditModal modalStatus={!!editingList} onClose={() => setEditingList(null)} modalTitle="Edit List" placeholder="Title" initialText={editingList?.title || ""} onSubmit={({ text }) => { if (editingList) { handleEditList(editingList.id, text); setEditingList(null); } }} />
+            <EditModal modalStatus={!!editingCard} onClose={() => setEditingCard(null)} modalTitle="Edit Card" placeholder="Text" initialText={editingCard?.title || ""} onSubmit={({ text }) => { if (editingCard) { handleEditCard(editingCard.listId, editingCard.id, text, editingCard.cardData); setEditingCard(null); } }} />
+            <EditModal modalStatus={isBoardEditModalOpen} onClose={() => setIsBoardEditModalOpen(false)} modalTitle="Edit Board" placeholder="Title" initialText={board.title} onSubmit={({ text }) => { handleEditBoard(text); setIsBoardEditModalOpen(false); }} />
         </div>
     );
 }

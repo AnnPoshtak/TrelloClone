@@ -1,3 +1,5 @@
+import { Pencil, Trash2 } from "lucide-react";
+
 interface CardProps {
     title: string;
     cardId: number;
@@ -7,34 +9,33 @@ interface CardProps {
 
 function Card({ title, cardId, onDelete, onEdit }: CardProps) {
     return (
-        <div className="group flex items-center justify-between bg-white p-3 rounded shadow-sm border border-transparent hover:border-gray-300 hover:shadow-md transition-all cursor-pointer">
+        <div className="group flex items-center justify-between bg-white/70 backdrop-blur-sm p-3.5 rounded-xl shadow-sm border border-white/60 hover:border-white hover:bg-white hover:shadow-md transition-all cursor-grab active:cursor-grabbing">
             
-            {/* Текст картки з динамічним підкресленням, як було у твоєму CSS */}
-            <span className="text-[#172b4d] font-medium truncate decoration-[var(--board-color)] decoration-2 underline-offset-4 group-hover:underline">
+            <span className="text-gray-800 font-medium truncate">
                 {title}
             </span>
 
-            {/* Контроли: з'являються при наведенні (opacity-0 -> group-hover:opacity-100) */}
-            <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+
+            <div className="flex gap-1">
                 <button 
                     onClick={(e) => {
-                        e.stopPropagation(); // щоб не спрацював клік по самій картці
+                        e.stopPropagation(); 
                         onEdit(cardId);
                     }}
-                    className="p-1 hover:bg-blue-50 rounded text-sm transition-colors"
+                    className="p-1.5 hover:bg-blue-50/80 text-gray-400 hover:text-blue-500 rounded-lg transition-all"
                     title="Edit"
                 >
-                    ✏️
+                    <Pencil strokeWidth={2} size={16} />
                 </button>
                 <button 
                     onClick={(e) => {
                         e.stopPropagation();
                         onDelete(cardId);
                     }}
-                    className="p-1 hover:bg-red-50 rounded text-sm transition-colors"
+                    className="p-1.5 hover:bg-red-50/80 text-gray-400 hover:text-red-500 rounded-lg transition-all"
                     title="Delete"
                 >
-                    ❌
+                    <Trash2 strokeWidth={2} size={16} />
                 </button>
             </div>
         </div>
