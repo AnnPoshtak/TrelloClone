@@ -1,6 +1,31 @@
-export const themeSettings: Record<string, { bg: string, btn: string }> = {
-    "Світло-Синя": { bg: "from-[#cbe5ff] via-[#e4e1fa] to-[#aeb0ea]", btn: "bg-[#4a81d4] hover:bg-[#3b6ab5]" },
-    "Темно-Синя": { bg: "from-[#0f2027] via-[#203a43] to-[#2ca1bc]", btn: "bg-[#2ca1bc] hover:bg-[#1f8299]" },
-    "Вогняна": { bg: "from-[#ff7e5f] via-[#feb47b] to-[#ff7e5f]", btn: "bg-[#e56b4f] hover:bg-[#cc5b41]" },
-    "Лісова": { bg: "from-[#56ab2f] via-[#a8e063] to-[#56ab2f]", btn: "bg-[#499426] hover:bg-[#3b781e]" }
+export const themeSettings = {
+  "Небесна": {
+    bg: "from-[#dbeafe] via-[#e0e7ff] to-[#c7d2fe]",
+    btn: "bg-[#6366f1] hover:bg-[#4f46e5]",
+    text: "text-[#6366f1]",
+  },
+
+  "Нічна": {
+    bg: "from-[#020617] via-[#0f172a] to-[#1e293b]",
+    btn: "bg-[#334155] hover:bg-[#475569] border border-slate-700",
+    text: "text-[#f8fafc]",
+  },
+
+  "Персикова": {
+    bg: "from-[#ffe0d2] via-[#ffd6e0] to-[#e7c6ff]",
+    btn: "bg-[#fb7185] hover:bg-[#f43f5e]",
+    text: "text-[#fb7185]",
+  },
+
+  "М’ятна": {
+    bg: "from-[#d1fae5] via-[#a7f3d0] to-[#6ee7b7]",
+    btn: "bg-[#10b981] hover:bg-[#059669]",
+    text: "text-[#10b981]",
+  },
+
+  "Космос": {
+    bg: "from-[#050505] via-[#1e1b4b] to-[#4c1d95]",
+    btn: "bg-[#a855f7] hover:bg-[#9333ea] shadow-[0_0_15px_rgba(168,85,247,0.4)]",
+    text: "text-[#e9d5ff]",
+  },
 };
