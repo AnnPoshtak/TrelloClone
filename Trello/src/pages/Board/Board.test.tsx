@@ -1,9 +1,11 @@
 import { vi, describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen, fireEvent, cleanup, waitFor, act } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Board from './Board.tsx';
+import { useBoard } from '@/hooks/useBoard/useBoard.tsx';
+import { useList } from '@/hooks/useList/useList.tsx';
+import { useCard } from '@/hooks/useCard/useCard.tsx';
 
-// 1. Mocking hooks
 vi.mock('@/hooks/useBoard/useBoard.tsx', () => ({
     useBoard: vi.fn()
 }));
@@ -14,25 +16,47 @@ vi.mock('@/hooks/useCard/useCard.tsx', () => ({
     useCard: vi.fn()
 }));
 
-import { useBoard } from '@/hooks/useBoard/useBoard.tsx';
-import { useList } from '@/hooks/useList/useList.tsx';
-import { useCard } from '@/hooks/useCard/useCard.tsx';
+vi.mock("./components/List/List.tsx", () => ({
+    default: ({ onListEdit, onCardEdit, onCardDelete, onListDelete, onCardMove }: any) => (
+        <div data-testid="list-item">
+            <button onClick={() => onListEdit()}>EditList</button>
+            <button onClick={() => onCardEdit(101)}>EditCard</button>
+            <button onClick={() => onCardDelete(101)}>DeleteCard</button>
+            <button onClick={() => onListDelete(1)}>DeleteList</button>
+            <button onClick={() => onCardMove(1, 2, 0)}>MoveCard</button>
+        </div>
+    )
+}));
 
-const mockBoardData = {
-    id: 1,
-    title: "My Test Board",
-};
+vi.mock("@/components/CreateModal/CreateModal.tsx", () => ({
+    default: ({ modalStatus, onSubmit, onClose, modalTitle }: any) => 
+        modalStatus ? (
+            <div data-testid="create-modal">
+                <h1>{modalTitle}</h1>
+                <button onClick={() => onSubmit({ text: "New Item", listId: 1 })}>SubmitCreate</button>
+                <button onClick={onClose}>CancelCreate</button>
+            </div>
+        ) : null
+}));
 
+vi.mock("@/components/EditModal/EditModal.tsx", () => ({
+    default: ({ modalStatus, onSubmit, onClose, modalTitle }: any) => 
+        modalStatus ? (
+            <div data-testid="edit-modal">
+                <h1>{modalTitle}</h1>
+                <button onClick={() => onSubmit({ text: "Updated Content" })}>SubmitEdit</button>
+                <button onClick={onClose}>CancelEdit</button>
+            </div>
+        ) : null
+}));
+
+const mockBoard = { id: "123", title: "Project Board" };
 const mockLists = [
-    { id: 1, title: "To Do", cards: [{ id: 1, title: "Test Card" }] }
+    { id: 1, title: "Todo", cards: [{ id: 101, title: "Task 1" }] }
 ];
 
-describe('Board Component', () => {
-    const defaultHooksValues = {
-        board: mockBoardData,
-        lists: mockLists,
-        isLoading: false,
-        isError: false,
+describe('Board Comprehensive Tests', () => {
+    const mocks = {
         handleBoardDelete: vi.fn(),
         handleEditBoard: vi.fn(),
         handleCreateList: vi.fn(),
@@ -46,112 +70,146 @@ describe('Board Component', () => {
 
     beforeEach(() => {
         vi.clearAllMocks();
-        (useBoard as any).mockReturnValue(defaultHooksValues);
-        (useList as any).mockReturnValue(defaultHooksValues);
-        (useCard as any).mockReturnValue(defaultHooksValues);
+        (useBoard as any).mockReturnValue({ board: mockBoard, lists: mockLists, isLoading: false, isError: false, ...mocks });
+        (useList as any).mockReturnValue({ ...mocks });
+        (useCard as any).mockReturnValue({ ...mocks });
+        cleanup();
     });
 
-    const renderBoard = () => render(
-        <MemoryRouter>
-            <Board />
-        </MemoryRouter>
-    );
+    const renderComp = () => render(<MemoryRouter><Board /></MemoryRouter>);
 
-    it('should match the snapshot', () => {
-        const { asFragment } = renderBoard();
-        expect(asFragment()).toMatchSnapshot();
-    });
-
-    it('should display the loader when loading', () => {
-        (useBoard as any).mockReturnValue({ ...defaultHooksValues, isLoading: true });
-        renderBoard();
+    it('renders loader when isLoading is true', () => {
+        (useBoard as any).mockReturnValue({ isLoading: true, lists: [] });
+        renderComp();
         expect(screen.getByText(/Loading.../i)).toBeInTheDocument();
     });
 
-    it('should display an error message if loading fails', () => {
-        (useBoard as any).mockReturnValue({ ...defaultHooksValues, isError: true });
-        renderBoard();
+    it('renders error state when isError is true', () => {
+        (useBoard as any).mockReturnValue({ isError: true, lists: [] });
+        renderComp();
         expect(screen.getByText(/Error loading board/i)).toBeInTheDocument();
     });
 
-    it('should render the board title and lists', () => {
-        renderBoard();
-        expect(screen.getByText("My Test Board")).toBeInTheDocument();
-        expect(screen.getByText("To Do")).toBeInTheDocument();
-        expect(screen.getByText("Test Card")).toBeInTheDocument();
+    it('renders board header and title', () => {
+        renderComp();
+        expect(screen.getByText("Project Board")).toBeInTheDocument();
     });
 
-    it('should open the "Create List" modal when the button is clicked', async () => {
-        renderBoard();
-        const btn = screen.getByRole('button', { name: /\+ Список/i });
-        fireEvent.click(btn);
-        expect(screen.getByText('Новий список')).toBeInTheDocument();
+    it('calls handleBoardDelete when delete button clicked', () => {
+        renderComp();
+        fireEvent.click(screen.getByText('Видалити'));
+        expect(mocks.handleBoardDelete).toHaveBeenCalled();
     });
 
-    it('should open the "Create Card" modal when the button is clicked', async () => {
-        renderBoard();
-        const btn = screen.getByRole('button', { name: /\+ Картка/i });
-        fireEvent.click(btn);
-        expect(screen.getByText('Нова картка')).toBeInTheDocument();
-    });
-
-    it('should open the "Edit Board" modal when the button is clicked', async () => {
-        renderBoard();
-        const btn = screen.getByRole('button', { name: /\Редагувати/i });
-        fireEvent.click(btn);
+    it('opens and closes Board Edit modal', async () => {
+        renderComp();
+        fireEvent.click(screen.getByText('Редагувати'));
         expect(screen.getByText('Редагувати дошку')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('CancelEdit'));
+        await waitFor(() => {
+            expect(screen.queryByText('Редагувати дошку')).not.toBeInTheDocument();
+        });
     });
 
-    it('should open the "Edit List" modal when the button is clicked', async () => {
-        renderBoard();
-        const btn = screen.getByRole('button', { name: /\Edit list/i });
-        fireEvent.click(btn);
+    it('submits Board Edit and calls handleEditBoard', async () => {
+        renderComp();
+        fireEvent.click(screen.getByText('Редагувати'));
+        fireEvent.click(screen.getByText('SubmitEdit'));
+        expect(mocks.handleEditBoard).toHaveBeenCalledWith("Updated Content");
+        await waitFor(() => {
+            expect(screen.queryByText('Редагувати дошку')).not.toBeInTheDocument();
+        });
+    });
+
+    it('opens and submits Create List modal', () => {
+        renderComp();
+        fireEvent.click(screen.getByText('+ Список'));
+        fireEvent.click(screen.getByText('SubmitCreate'));
+        expect(mocks.handleCreateList).toHaveBeenCalledWith("New Item", expect.any(Function));
+    });
+
+    it('triggers list editing and submits change', async () => {
+        renderComp();
+        fireEvent.click(screen.getByText('EditList'));
         expect(screen.getByText('Редагувати список')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('SubmitEdit'));
+        expect(mocks.handleEditList).toHaveBeenCalledWith(1, "Updated Content");
+        await waitFor(() => {
+            expect(screen.queryByText('Редагувати список')).not.toBeInTheDocument();
+        });
     });
 
-    it('should open the "Edit Card" modal when the button is clicked', async () => {
-        renderBoard();
-        const btn = screen.getByRole('button', { name: /\Edit card/i });
-        fireEvent.click(btn);
+    it('triggers card editing and submits change', async () => {
+        renderComp();
+        fireEvent.click(screen.getByText('EditCard'));
         expect(screen.getByText('Редагувати картку')).toBeInTheDocument();
+        fireEvent.click(screen.getByText('SubmitEdit'));
+        expect(mocks.handleEditCard).toHaveBeenCalled();
+        await waitFor(() => {
+            expect(screen.queryByText('Редагувати картку')).not.toBeInTheDocument();
+        });
     });
 
-    it('should call handleBoardDelete when the delete button is clicked', () => {
-        const deleteSpy = vi.fn();
-        (useBoard as any).mockReturnValue({ ...defaultHooksValues, handleBoardDelete: deleteSpy });
-        renderBoard();
-
-        const deleteBtn = screen.getByText('Видалити');
-        fireEvent.click(deleteBtn);
-
-        expect(deleteSpy).toHaveBeenCalledTimes(1);
+    it('calls handleListDelete from List component', () => {
+        renderComp();
+        fireEvent.click(screen.getByText('DeleteList'));
+        expect(mocks.handleListDelete).toHaveBeenCalledWith(1);
     });
 
-    it('should call handleListDelete when the delete button is clicked', () => {
-        const deleteSpy = vi.fn();
-        (useList as any).mockReturnValue({ ...defaultHooksValues, handleListDelete: deleteSpy });
-        renderBoard();
-
-        const deleteBtn = screen.getByRole('button', { name: /\Delete list/i });
-        fireEvent.click(deleteBtn);
-
-        expect(deleteSpy).toHaveBeenCalledTimes(1);
+    it('calls handleCardDelete from List component', () => {
+        renderComp();
+        fireEvent.click(screen.getByText('DeleteCard'));
+        expect(mocks.handleCardDelete).toHaveBeenCalledWith(1, 101);
     });
 
-    it('should call handleCardDelete when the delete button is clicked', () => {
-        const deleteSpy = vi.fn();
-        (useCard as any).mockReturnValue({ ...defaultHooksValues, handleCardDelete: deleteSpy });
-        renderBoard();
-
-        const deleteBtn = screen.getByRole('button', { name: /\Delete card/i });
-        fireEvent.click(deleteBtn);
-
-        expect(deleteSpy).toHaveBeenCalledTimes(1);
+    it('loads custom theme from localStorage', () => {
+        const spy = vi.spyOn(Storage.prototype, 'getItem').mockReturnValue('Темна');
+        renderComp();
+        expect(spy).toHaveBeenCalledWith('trello_theme');
+        spy.mockRestore();
     });
 
-    it('should correctly display the back button to the boards list', () => {
-        renderBoard();
-        const link = screen.getByRole('link', { name: /← Дошки/i });
-        expect(link).toHaveAttribute('href', '/');
+    it('closes Create List modal using the callback passed to hook', async () => {
+        let capturedCallback: any;
+        mocks.handleCreateList.mockImplementation((text, cb) => { capturedCallback = cb; });
+        renderComp();
+        fireEvent.click(screen.getByText('+ Список'));
+        fireEvent.click(screen.getByText('SubmitCreate'));
+        
+        await act(async () => {
+            capturedCallback();
+        });
+
+        await waitFor(() => {
+            expect(screen.queryByText('Новий список')).not.toBeInTheDocument();
+        });
+    });
+
+    it('closes Create Card modal using the callback passed to hook', async () => {
+        let capturedCallback: any;
+        mocks.handleCreateCard.mockImplementation((t, id, cb) => { capturedCallback = cb; });
+        renderComp();
+        fireEvent.click(screen.getByText('+ Картка'));
+        fireEvent.click(screen.getByText('SubmitCreate'));
+        
+        await act(async () => {
+            capturedCallback();
+        });
+
+        await waitFor(() => {
+            expect(screen.queryByText('Нова картка')).not.toBeInTheDocument();
+        });
+    });
+
+    it('should handle card move calls', () => {
+        renderComp();
+        fireEvent.click(screen.getByText('MoveCard'));
+        expect(mocks.handleCardMove).toHaveBeenCalled();
+    });
+
+    it('handles absence of lists correctly', () => {
+        (useBoard as any).mockReturnValue({ board: mockBoard, lists: [], isLoading: false, isError: false, ...mocks });
+        renderComp();
+        expect(screen.queryByTestId('list-item')).not.toBeInTheDocument();
     });
 });
