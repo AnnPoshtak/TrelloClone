@@ -19,7 +19,6 @@ const localStorageMock = (() => {
         clear: vi.fn(() => { store = {}; })
     };
 })();
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 describe("EditModal Component - Deep Testing", () => {
     const defaultProps = {
