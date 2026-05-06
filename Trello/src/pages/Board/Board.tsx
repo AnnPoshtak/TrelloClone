@@ -38,14 +38,20 @@ function Board() {
             </div>
         );
     }
-    if (isError || !board) return <div className="text-red-500 text-center mt-10 font-medium">Error loading board</div>; 
+
+    if (isError || !board) {
+        return (
+            <div className="flex flex-col items-center justify-center h-screen gap-4">
+                <div className="text-red-500 text-xl font-medium">Error loading board</div>
+                <Link to="/" className="text-blue-500 underline">Повернутися на головну</Link>
+            </div>
+        );
+    }
 
     const currentBoard = board as unknown as IBoard;
 
     return (
-        <div 
-            className={`min-h-screen flex flex-col bg-linear-to-br ${currentTheme.bg} transition-colors duration-700 font-sans relative overflow-hidden`}>
-
+        <div className={`min-h-screen flex flex-col bg-linear-to-br ${currentTheme.bg} transition-colors duration-700 font-sans relative overflow-hidden`}>
             <header className="flex justify-between items-center w-full p-8 relative z-10 shrink-0">
                 <Link 
                     to="/" 
@@ -84,7 +90,6 @@ function Board() {
                         </button>
                     </div>
                 </div>
-
                 <div className="w-30 hidden md:block"></div>
             </header>
 
