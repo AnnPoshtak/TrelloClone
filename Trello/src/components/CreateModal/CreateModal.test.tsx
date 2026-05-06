@@ -19,7 +19,6 @@ const localStorageMock = (() => {
         clear: vi.fn(() => { store = {}; })
     };
 })();
-Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
 const mockLists = [
     { id: 101, title: "Backlog", cards: [] },
