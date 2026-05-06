@@ -25,6 +25,8 @@ const mockLists = [
     { id: 102, title: "In Progress", cards: [] }
 ];
 
+Object.defineProperty(window, 'localStorage', { value: localStorageMock });
+
 describe("CreateModal Component - Deep Testing", () => {
     const defaultProps = {
         modalStatus: true,
