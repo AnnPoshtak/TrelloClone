@@ -1,7 +1,7 @@
-import api from "../../api/request.ts";
-import { deleteList, editList } from "../../services/list.ts";
+import api from "@/api/request.ts";
+import { deleteList, editList } from "@/services/list.ts";
 import toast from "react-hot-toast";
-import type { IList } from "../../common/interfaces/IList.ts";
+import type { IList } from "@/common/interfaces/IList.ts";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useList(board_id: string | undefined, lists: IList[]) {

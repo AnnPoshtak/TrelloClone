@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import api from '../../api/request.ts';
+import api from '@/api/request.ts';
 import { useNavigate } from 'react-router-dom';
 
 export const useRegister = () => {
