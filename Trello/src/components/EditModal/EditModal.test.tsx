@@ -82,7 +82,7 @@ describe("EditModal Component - Deep Testing", () => {
         await waitFor(() => {
             expect(defaultProps.onSubmit).toHaveBeenCalledWith({
                 text: "Оновлена назва",
-                color: "#112233" // Колір залишився початковим, бо ми його не міняли
+                color: "#112233"
             });
             expect(defaultProps.onClose).toHaveBeenCalled();
         });

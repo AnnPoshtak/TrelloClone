@@ -1,4 +1,3 @@
-// useBoards.test.ts
 import { renderHook, waitFor, act } from "@testing-library/react";
 import { vi, describe, it, expect, beforeEach } from "vitest";
 import { useBoards } from "./useBoards";
